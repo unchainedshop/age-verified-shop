@@ -7,6 +7,9 @@ import {
 import defaultModules from "@unchainedshop/plugins/presets/all.js";
 import connectDefaultPluginsToFastify from "@unchainedshop/plugins/presets/all-fastify.js";
 import { fastifyRouter } from "@unchainedshop/admin-ui/fastify";
+import typeDefs from "./api/schema.ts";
+import resolvers from "./api/resolvers/index.ts";
+import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';
 
 const fastify = Fastify({
   loggerInstance: unchainedLogger("fastify"),
@@ -18,6 +21,11 @@ try {
   const platform = await startPlatform({
     modules: defaultModules,
     healthCheckEndpoint: "/.well-known/yoga/server-health",
+    typeDefs,
+    resolvers,
+    plugins: [
+      useGraphQLSSE()
+    ]
   });
 
   connect(fastify, platform, {

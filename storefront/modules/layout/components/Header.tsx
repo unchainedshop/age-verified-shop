@@ -62,18 +62,20 @@ const Header: React.FC<HeaderProps> = ({
       <div className="relative container mx-auto">
         <div className="grid h-16 grid-cols-3 items-center px-4">
           <div className="flex justify-start">
-            <button
-              type="button"
-              aria-label="menu"
-              className={`rounded-md p-2 transition-all duration-200 ${
-                isHeroMode
-                  ? 'text-white/80 hover:bg-white/10 hover:text-white'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
-              }`}
-              onClick={onSidebarToggle}
-            >
-              <Bars3Icon className="h-6 w-6" />
-            </button>
+            {onSidebarToggle && (
+              <button
+                type="button"
+                aria-label="menu"
+                className={`rounded-md p-2 transition-all duration-200 ${
+                  isHeroMode
+                    ? 'text-white/80 hover:bg-white/10 hover:text-white'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                }`}
+                onClick={onSidebarToggle}
+              >
+                <Bars3Icon className="h-6 w-6" />
+              </button>
+            )}
           </div>
 
           <div className="flex justify-center uppercase">

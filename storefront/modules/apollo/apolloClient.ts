@@ -3,6 +3,7 @@ import {
   ApolloClient,
   HttpLink,
   InMemoryCache,
+  split,
   from,
   ApolloLink,
 } from '@apollo/client';
@@ -42,7 +43,7 @@ const errorLink = onError(
 const uri =
   typeof window === 'undefined'
     ? process.env.UNCHAINED_ENDPOINT || 'http://localhost:4010/graphql'
-    : `${window.origin}/graphql`;
+    : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || `${window.origin}/graphql`;
 
 const httpLink = new HttpLink({
   uri,
