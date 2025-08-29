@@ -10,6 +10,7 @@ import { fastifyRouter } from "@unchainedshop/admin-ui/fastify";
 import typeDefs from "./api/schema.ts";
 import resolvers from "./api/resolvers/index.ts";
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';
+import connectREST from './api/rest/index.ts';
 
 const fastify = Fastify({
   loggerInstance: unchainedLogger("fastify"),
@@ -31,8 +32,8 @@ try {
   connect(fastify, platform, {
     allowRemoteToLocalhostSecureCookies: process.env.NODE_ENV !== "production",
   });
-
   connectDefaultPluginsToFastify(fastify, platform);
+  connectREST(fastify);
 
   fastify.register(fastifyRouter, {
     prefix: "/",

@@ -1,6 +1,8 @@
 import useRequestAgeVerification from '../../auth/hooks/useRequestAgeVerification';
 import useQRCodeGenerator from 'react-hook-qrcode-svg';
 import Loading from '../../common/components/Loading';
+import Image from 'next/image';
+import Link from 'next/link';
 const QRCODE_SIZE = 256;
 const QRCODE_LEVEL = 'Q';
 const QRCODE_BORDER = 4;
@@ -16,23 +18,22 @@ export default function AgeVerification() {
 
   return (
     <div>
-      <div className="sm:flex sm:items-center sm:justify-center flex-col mt-10">
-        Please verify your age so we know which products you are allowed to see
+      <div className="sm:flex sm:items-center sm:justify-center flex-col mt-5">
+        We need to verify your age so we know which products you are allowed to
+        see
         {verificationRequest ? (
           <>
-            <code>ID: {verificationRequest?._id}</code>
-            <code>Status: {verificationRequest?.state}</code>
+            <Loading>Please scan with your Camera or Swiyu App</Loading>
             {verificationRequest?.state === 'FAILED' ? (
               <button
                 type="button"
                 onClick={() => reset()}
-                className="w-full rounded-md border border-transparent bg-red-600 py-3 px-4 text-base font-medium text-white shadow-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 focus:ring-offset-slate-50"
+                className="rounded-md border border-transparent bg-red-600 py-3 px-4 text-base font-medium text-white shadow-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 focus:ring-offset-slate-50"
               >
                 Reset
               </button>
             ) : (
               <svg
-                className="mt-4"
                 width={QRCODE_SIZE}
                 height={QRCODE_SIZE}
                 viewBox={viewBox}
@@ -46,6 +47,25 @@ export default function AgeVerification() {
         ) : (
           <Loading />
         )}
+        <Image
+          className="mt-10"
+          src="https://prod-eidch-hcms-sdweb.imgix.net/2025/02/19/e5c89823-7449-4e53-a36f-93959989b445.png?auto=format"
+          alt="Age Verification"
+          width={50}
+          height={50}
+        />
+        <Link
+          className="mt-5 font-medium text-blue-600 hover:underline"
+          href="https://apps.apple.com/ch/app/swiyu/id6737259614"
+        >
+          Download swiyu for iOS
+        </Link>
+        <Link
+          className="mt-3 font-medium text-blue-600 hover:underline"
+          href="https://play.google.com/store/apps/details?id=ch.admin.foitt.swiyu&pli=1"
+        >
+          Download swiyu for Android
+        </Link>
       </div>
     </div>
   );

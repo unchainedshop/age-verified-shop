@@ -18,6 +18,9 @@ const nextJsConfig = {
     UNCHAINED_ENDPOINT,
     disableEmailSupport: !!DISABLE_EMAIL_PROCESSES,
   },
+  images: {
+    domains: ["prod-eidch-hcms-sdweb.imgix.net"],
+  },
   i18n: {
     locales: ["en", "de"],
     defaultLocale: "en",

@@ -2,28 +2,6 @@ import { log } from "@unchainedshop/logger";
 import type { Context } from "@unchainedshop/api";
 import { pubSub } from "../bus.ts";
 
-const primitiveUpdater = async (requestId) => {
-  const response = await fetch(
-    `https://swiyu.unchained.wtf/management/api/verifications/${requestId}`,
-    {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-      },
-    }
-  );
-
-  if (response.status !== 200) {
-    throw new Error(
-      `Failed to fetch age verification status: ${await response.text()}`
-    );
-  }
-
-  const data = await response.json();
-  console.log(data);
-  pubSub.publish(`verifier-response:${requestId}`, data);
-};
-
 export default {
   subscribe: async function (root: unknown, _: never, context: Context) {
     log(`subscription requestAgeVerification`);
@@ -90,11 +68,9 @@ export default {
 
     const data = await response.json();    
     const subscription = pubSub.subscribe(`verifier-response:${data.id}`);
-
     setTimeout(() => {
       pubSub.publish(`verifier-response:${data.id}`, data);
     }, 100);
-    setInterval(() => primitiveUpdater(data.id), 5000);
     return subscription;
   },
   resolve: (payload) => payload,
