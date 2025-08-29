@@ -19,18 +19,18 @@ export default function AgeVerification() {
   return (
     <div>
       <div className="sm:flex sm:items-center sm:justify-center flex-col mt-5">
-        We need to verify your age so we know which products you are allowed to
-        see
+        Wir müssen dein Alter verifizieren, damit wir wissen, welche Produkte du
+        sehen darfst
         {verificationRequest ? (
           <>
-            <Loading>Please scan with your Camera or Swiyu App</Loading>
+            <Loading>Scan den QR Code mit der swiyu App</Loading>
             {verificationRequest?.state === 'FAILED' ? (
               <button
                 type="button"
                 onClick={() => reset()}
                 className="rounded-md border border-transparent bg-red-600 py-3 px-4 text-base font-medium text-white shadow-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 focus:ring-offset-slate-50"
               >
-                Reset
+                Erneut versuchen (mit Papa's Handy? 😉)
               </button>
             ) : (
               <svg
