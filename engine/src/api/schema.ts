@@ -14,6 +14,10 @@ export default [
       verificationDeepLink: String!
     }
 
+    extend type User {
+      ageVerification: JSON
+    }
+
     type Subscription {
       requestAgeVerification: SwiyuVerifierManagementResponse!
     }

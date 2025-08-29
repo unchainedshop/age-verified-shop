@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const useRequestAgeVerification = () => {
+const useRequestAgeVerification = ({
+  skip = false,
+}: { skip?: boolean } = {}) => {
   const [data, setData] = useState<any>(null);
   const sourceRef = useRef<EventSource | null>(null);
 
@@ -25,7 +27,9 @@ const useRequestAgeVerification = () => {
       }`,
     );
 
-    const source = new EventSource(url);
+    const source = new EventSource(url, {
+      withCredentials: true,
+    });
 
     source.addEventListener('next', (event: MessageEvent) => {
       try {
@@ -48,12 +52,13 @@ const useRequestAgeVerification = () => {
   }, [setData]);
 
   useEffect(() => {
+    if (skip) return;
     sourceRef.current = createEventSource();
     return () => {
       sourceRef.current?.close();
       sourceRef.current = null;
     };
-  }, [createEventSource]);
+  }, [createEventSource, skip]);
 
   const reset = () => {
     sourceRef.current?.close();

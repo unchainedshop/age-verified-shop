@@ -1,4 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
+import type { Context } from "@unchainedshop/api";
 import { pubSub } from "../bus.ts";
 
 export default async function swiyuCallbackHandler(
@@ -6,11 +7,13 @@ export default async function swiyuCallbackHandler(
     Body: {
       verification_id: string;
     };
-  }>,
+  }> & { unchainedContext: Context },
   reply: FastifyReply
 ) {
   try {
-    request.log.info(`Received Swiyu callback for: ${request.body.verification_id}`);
+    request.log.info(
+      `Received Swiyu callback for: ${request.body.verification_id}`
+    );
     const response = await fetch(
       `https://swiyu.unchained.wtf/management/api/verifications/${request.body.verification_id}`,
       {
@@ -26,10 +29,25 @@ export default async function swiyuCallbackHandler(
       );
     }
     const data = await response.json();
-    pubSub.publish(
-      `verifier-response:${request.body.verification_id}`,
-      data
-    );
+
+    const user = await request.unchainedContext.modules.users.findUser({
+      "meta.ageVerification.requestId": request.body.verification_id,
+      includeGuests: true,
+    });
+
+    if (data.state === "SUCCESS") {
+      await request.unchainedContext.modules.users.updateProfile(user._id, {
+        meta: {
+          ageVerification: {
+            requestId: request.body.verification_id,
+            timestamp: new Date(),
+            ...data.wallet_response?.credential_subject_data,
+          },
+        },
+      });
+    }
+
+    pubSub.publish(`verifier-response:${request.body.verification_id}`, data);
     return reply.code(200).send();
   } catch (e) {
     request.log.error(e);

@@ -6,6 +6,7 @@ import ProductPriceFragment from '../../products/fragments/ProductPriceFragment'
 const CurrentUserFragment = gql`
   fragment CurrentUser on User {
     _id
+    ageVerification
     isGuest
     name
     username

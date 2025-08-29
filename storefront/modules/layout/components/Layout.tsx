@@ -5,6 +5,7 @@ import Header from './Header';
 import SidebarNavigation from './SidebarNavigation';
 import SideCart from '../../cart/components/SideCart';
 import { useAppContext } from '../../common/components/AppContextWrapper';
+import useUser from '../../auth/hooks/useUser';
 
 const AgeVerification = dynamic(() => import('./AgeVerification'), {
   ssr: false,
@@ -20,6 +21,7 @@ const Layout: React.FC<LayoutProps> = ({
   hasHeroSection = false,
   heroSectionId = 'hero-section',
 }) => {
+  const { user } = useUser();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { isCartOpen } = useAppContext();
 
@@ -31,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({
     setSidebarOpen(false);
   };
 
-  const isAgeVerified = false;
+  const isAgeVerified = user?.ageVerification;
 
   if (!isAgeVerified) {
     return (

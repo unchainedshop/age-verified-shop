@@ -4,7 +4,10 @@ import { pubSub } from "../bus.ts";
 
 export default {
   subscribe: async function (root: unknown, _: never, context: Context) {
-    log(`subscription requestAgeVerification`);
+    const { user, userId } = context;
+    log(`subscription requestAgeVerification`, { userId });
+
+    if (!userId) throw new Error("Login required");
 
     const response = await fetch(
       "https://swiyu.unchained.wtf/management/api/verifications",
@@ -18,7 +21,7 @@ export default {
           // accepted_issuer_dids: [
           //   "did:tdw:QmRSJNTEM1PkmiD6fcfAFdZERmzqVkok6xwmx9XyvgckxX:identifier-reg-a.trust-infra.swiyu-int.admin.ch:api:v1:did:5caa5372-34b5-4a47-9744-55ba8e680ed0",
           // ],
-          jwt_secured_authorization_request: true,
+          jwt_secured_authorization_request: false,
           presentation_definition: {
             id: "00000000-0000-0000-0000-000000000000",
             name: "Altersverifizierung",
@@ -66,8 +69,18 @@ export default {
       );
     }
 
-    const data = await response.json();    
+    const data = await response.json();
     const subscription = pubSub.subscribe(`verifier-response:${data.id}`);
+
+    await context.modules.users.updateProfile(userId, {
+      meta: {
+        ageVerification: {
+          requestId: data.id,
+          timestamp: new Date(),
+        },
+      },
+    });
+
     setTimeout(() => {
       pubSub.publish(`verifier-response:${data.id}`, data);
     }, 100);

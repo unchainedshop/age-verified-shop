@@ -47,7 +47,7 @@ const uri =
 
 const httpLink = new HttpLink({
   uri,
-  credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
+  credentials: 'include',
 });
 
 function createApolloClient({ locale }) {

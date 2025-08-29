@@ -3,12 +3,40 @@ import useQRCodeGenerator from 'react-hook-qrcode-svg';
 import Loading from '../../common/components/Loading';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import useUser from '../../auth/hooks/useUser';
+import useLoginAsGuest from '../../auth/hooks/useLoginAsGuest';
+
 const QRCODE_SIZE = 256;
 const QRCODE_LEVEL = 'Q';
 const QRCODE_BORDER = 4;
 
 export default function AgeVerification() {
-  const { verificationRequest, reset } = useRequestAgeVerification();
+  const { user, loading, refetch } = useUser();
+  const { verificationRequest, reset } = useRequestAgeVerification({
+    skip: !user?._id,
+  });
+  const { loginAsGuest, called } = useLoginAsGuest();
+
+  const userId = user?._id;
+
+  useEffect(() => {
+    let timeout;
+    if (!userId && !loading) {
+      if (!called) {
+        loginAsGuest();
+      }
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [loading, userId]); // DO NOT include the mutation functions
+
+  useEffect(() => {
+    if (verificationRequest?.state === 'SUCCESS' && !loading) {
+      refetch();
+    }
+  }, [verificationRequest, refetch, loading]);
 
   const { path, viewBox } = useQRCodeGenerator(
     verificationRequest?.verificationDeepLink,
