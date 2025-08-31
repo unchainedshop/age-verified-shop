@@ -4,9 +4,15 @@ import ProductPriceFragment from '../../products/fragments/ProductPriceFragment'
 import AssortmentFragment from '../fragments/assortment';
 import AssortmentMediaFragment from '../fragments/AssortmentMedia';
 import AssortmentPathFragment from '../fragments/AssortmentPath';
+import useUser from '../../auth/hooks/useUser';
 
 export const ASSORTMENT_PRODUCTS_QUERY = gql`
-  query AssortmentsProducts($slugs: String!, $offset: Int, $limit: Int) {
+  query AssortmentsProducts(
+    $userId: String
+    $slugs: String!
+    $offset: Int
+    $limit: Int
+  ) {
     assortment(slug: $slugs) {
       ...AssortmentFragment
       assortmentPaths {
@@ -15,7 +21,7 @@ export const ASSORTMENT_PRODUCTS_QUERY = gql`
       media {
         ...AssortmentMediaFragment
       }
-      searchProducts {
+      searchProducts(filterQuery: [{ key: "userId", value: $userId }]) {
         filteredProductsCount
         productsCount
         products(offset: $offset, limit: $limit) {
@@ -41,10 +47,12 @@ const useAssortmentProducts = (
     slugs: [],
   },
 ) => {
+  const { user } = useUser();
   const { data, loading, error, fetchMore } = useQuery(
     ASSORTMENT_PRODUCTS_QUERY,
     {
       variables: {
+        userId: user?._id,
         includeLeaves,
         slugs,
         offset: 0,

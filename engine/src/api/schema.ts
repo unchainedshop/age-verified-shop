@@ -18,6 +18,10 @@ export default [
       ageVerification: JSON
     }
 
+    extend type Mutation {
+      checkAgeVerification(requestId: ID!): SwiyuVerifierManagementResponse!
+    }
+
     type Subscription {
       requestAgeVerification: SwiyuVerifierManagementResponse!
     }

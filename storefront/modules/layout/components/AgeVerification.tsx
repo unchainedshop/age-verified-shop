@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import useUser from '../../auth/hooks/useUser';
 import useLoginAsGuest from '../../auth/hooks/useLoginAsGuest';
+import useCheckAgeVerification from '../../auth/hooks/useCheckAgeVerification';
 
 const QRCODE_SIZE = 256;
 const QRCODE_LEVEL = 'Q';
@@ -13,6 +14,7 @@ const QRCODE_BORDER = 4;
 
 export default function AgeVerification() {
   const { user, loading, refetch } = useUser();
+  const { checkAgeVerification } = useCheckAgeVerification();
   const { verificationRequest, reset } = useRequestAgeVerification({
     skip: !user?._id,
   });
@@ -44,6 +46,10 @@ export default function AgeVerification() {
     QRCODE_BORDER,
   );
 
+  const check = () => {
+    checkAgeVerification(verificationRequest?._id);
+  };
+
   return (
     <div>
       <div className="sm:flex sm:items-center sm:justify-center flex-col mt-5">
@@ -61,15 +67,17 @@ export default function AgeVerification() {
                 Erneut versuchen (mit Papa's Handy? 😉)
               </button>
             ) : (
-              <svg
-                width={QRCODE_SIZE}
-                height={QRCODE_SIZE}
-                viewBox={viewBox}
-                stroke="none"
-              >
-                <rect width="100%" height="100%" fill="#ffffff" />
-                <path d={path} fill="#000000" />
-              </svg>
+              <button onClick={check}>
+                <svg
+                  width={QRCODE_SIZE}
+                  height={QRCODE_SIZE}
+                  viewBox={viewBox}
+                  stroke="none"
+                >
+                  <rect width="100%" height="100%" fill="#ffffff" />
+                  <path d={path} fill="#000000" />
+                </svg>
+              </button>
             )}
           </>
         ) : (

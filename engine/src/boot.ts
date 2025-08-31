@@ -12,6 +12,8 @@ import resolvers from "./api/resolvers/index.ts";
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';
 import connectREST from './api/rest/index.ts';
 
+import './plugins/age-restriction.ts';
+
 const fastify = Fastify({
   loggerInstance: unchainedLogger("fastify"),
   disableRequestLogging: true,

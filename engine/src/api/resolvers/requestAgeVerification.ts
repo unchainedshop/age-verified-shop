@@ -54,6 +54,9 @@ export default {
                     {
                       path: ["$.age_over_18"],
                     },
+                    {
+                      path: ["$.age_over_16"],
+                    },
                   ],
                 },
               },
