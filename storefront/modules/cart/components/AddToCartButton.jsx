@@ -163,7 +163,7 @@ const AddToCartButton = ({ productId, ...product }) => {
             <>
               <ShoppingCartIcon className="h-5 w-5 mr-2" />
               {formatMessage({
-                id: "add-to-cart",
+                id: "add_to_cart",
                 defaultMessage: "Add to Cart",
               })}
             </>
