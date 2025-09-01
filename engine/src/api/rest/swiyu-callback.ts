@@ -53,7 +53,7 @@ export default async function swiyuCallbackHandler(
     return reply.code(200).send();
   } catch (e) {
     request.log.error(e);
-    return reply.code(403).send({
+    return reply.code(200).send({
       error: e.message,
       success: false,
       token: null,
