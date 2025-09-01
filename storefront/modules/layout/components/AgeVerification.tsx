@@ -110,8 +110,8 @@ export default function AgeVerification() {
                 ) : (
                   <div className="text-center space-y-4">
                     <h3 className="text-gray-400">
-                      Mit der offiziellen swiyu-App der Schweizer Regierung den
-                      QR-Code scannen und dein Alter bestätigen um fortzufahren.
+                      Mit der Swiyu-App den QR-Code scannen und Alter
+                      bestätigen, um fortzufahren.
                     </h3>
                     <button
                       onClick={check}
