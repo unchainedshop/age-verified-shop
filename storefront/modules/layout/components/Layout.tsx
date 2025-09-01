@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({
     setSidebarOpen(false);
   };
 
-  const isAgeVerified = user?.ageVerification;
+  const isAgeVerified = user?.ageVerification?.status;
 
   if (!isAgeVerified) {
     return (

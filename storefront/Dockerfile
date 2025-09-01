@@ -13,9 +13,11 @@ RUN npm install
 # Build app
 COPY . /usr/src/app/
 
-ARG UNCHAINED_ENDPOINT=http://localhost:4010/graphql
+ARG UNCHAINED_ENDPOINT=http://swiyu.unchained.wtf/graphql
+ARG NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://swiyu.unchained.wtf/graphql
 
 ENV UNCHAINED_ENDPOINT=$UNCHAINED_ENDPOINT
+ENV NEXT_PUBLIC_GRAPHQL_ENDPOINT=$NEXT_PUBLIC_GRAPHQL_ENDPOINT
 ENV NEXT_TELEMETRY_DISABLED="1"
 
 RUN npm run build && \
