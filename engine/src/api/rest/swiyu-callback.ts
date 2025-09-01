@@ -2,6 +2,8 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import type { Context } from "@unchainedshop/api";
 import { pubSub } from "../bus.ts";
 
+const { SWIYU_VERIFIER_ENDPOINT } = process.env;
+
 export default async function swiyuCallbackHandler(
   request: FastifyRequest<{
     Body: {
@@ -15,7 +17,7 @@ export default async function swiyuCallbackHandler(
       `Received Swiyu callback for: ${request.body.verification_id}`
     );
     const response = await fetch(
-      `https://swiyu.unchained.wtf/management/api/verifications/${request.body.verification_id}`,
+      `${SWIYU_VERIFIER_ENDPOINT}/verifications/${request.body.verification_id}`,
       {
         method: "GET",
         headers: {

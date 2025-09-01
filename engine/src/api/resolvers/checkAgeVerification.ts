@@ -1,9 +1,11 @@
 import type { Context } from "@unchainedshop/api";
 import { pubSub } from "../bus.ts";
 
+const { SWIYU_VERIFIER_ENDPOINT } = process.env;
+
 export default async function checkAgeVerification(root: never, { requestId }, context: Context) {
   const response = await fetch(
-      `https://swiyu.unchained.wtf/management/api/verifications/${requestId}`,
+      `${SWIYU_VERIFIER_ENDPOINT}/verifications/${requestId}`,
       {
         method: "GET",
         headers: {

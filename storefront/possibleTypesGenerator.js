@@ -1,7 +1,6 @@
 import fs from "fs";
 
 const { UNCHAINED_ENDPOINT = "http://localhost:4010/graphql" } = process.env;
-console.log(UNCHAINED_ENDPOINT);
 
 fetch(UNCHAINED_ENDPOINT, {
   method: "POST",

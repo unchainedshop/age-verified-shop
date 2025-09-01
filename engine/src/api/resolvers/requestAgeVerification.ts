@@ -2,6 +2,8 @@ import { log } from "@unchainedshop/logger";
 import type { Context } from "@unchainedshop/api";
 import { pubSub } from "../bus.ts";
 
+const { SWIYU_VERIFIER_ENDPOINT } = process.env;
+
 export default {
   subscribe: async function (root: unknown, _: never, context: Context) {
     const { user, userId } = context;
@@ -10,7 +12,7 @@ export default {
     if (!userId) throw new Error("Login required");
 
     const response = await fetch(
-      "https://swiyu.unchained.wtf/management/api/verifications",
+      `${SWIYU_VERIFIER_ENDPOINT}/verifications`,
       {
         method: "POST",
         headers: {
