@@ -61,8 +61,6 @@ export default function AgeVerification() {
     checkAgeVerification(verificationRequest?._id);
   };
 
-  if (isMobile === undefined) return <Loading />;
-
   return (
     <div className="bg-slate-50 min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -99,17 +97,6 @@ export default function AgeVerification() {
                     }
                   >
                     Beta ID mit Swiyu vorweisen
-                  </button>
-                ) : (
-                  <button onClick={check}>
-                    <svg
-                      width={QRCODE_SIZE}
-                      height={QRCODE_SIZE}
-                      viewBox={viewBox}
-                      stroke="none"
-                    >
-                      Mit Swiyu verifizieren
-                    </svg>
                   </button>
                 ) : (
                   <div className="text-center space-y-4">
