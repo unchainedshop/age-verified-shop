@@ -101,7 +101,7 @@ export default function AgeVerification() {
                         verificationRequest?._id,
                       );
                       if (updatedRequest.state === 'PENDING') {
-                        window.open(verificationRequest.verificationDeepLink);
+                        window.open(updatedRequest.verificationDeepLink);
                       }
                     }}
                   >
