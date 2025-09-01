@@ -13,7 +13,7 @@ const QRCODE_LEVEL = 'Q';
 const QRCODE_BORDER = 4;
 
 export default function AgeVerification() {
-  const [isMobile, setMobile] = useState(undefined);
+  const [isMobile, setMobile] = useState(false); // useState(undefined);
   const { user, loading, refetch } = useUser();
   const { checkAgeVerification } = useCheckAgeVerification();
   const { verificationRequest, reset } = useRequestAgeVerification({
@@ -41,15 +41,15 @@ export default function AgeVerification() {
     }
   }, [verificationRequest, refetch, loading]);
 
-  useEffect(() => {
-    if (
-      /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
-    ) {
-      setMobile(true);
-    } else {
-      setMobile(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (
+  //     /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
+  //   ) {
+  //     setMobile(true);
+  //   } else {
+  //     setMobile(false);
+  //   }
+  // }, []);
 
   const { path, viewBox } = useQRCodeGenerator(
     verificationRequest?.verificationDeepLink,
@@ -92,17 +92,25 @@ export default function AgeVerification() {
             ) : (
               <div className="space-y-6">
                 {isMobile ? (
-                  <div className="text-center space-y-4">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Verwende die Swiyu App, um deine Beta ID vorzuweisen
-                    </p>
-                    <a
-                      className="inline-flex w-full justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                      href={verificationRequest.verificationDeepLink}
+                  <button
+                    className="rounded-md border border-transparent bg-red-600 py-3 px-4 text-base font-medium text-white shadow-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 focus:ring-offset-slate-50"
+                    onClick={() =>
+                      window.open(verificationRequest.verificationDeepLink)
+                    }
+                  >
+                    Beta ID mit Swiyu vorweisen
+                  </button>
+                ) : (
+                  <button onClick={check}>
+                    <svg
+                      width={QRCODE_SIZE}
+                      height={QRCODE_SIZE}
+                      viewBox={viewBox}
+                      stroke="none"
                     >
                       Mit Swiyu verifizieren
-                    </a>
-                  </div>
+                    </svg>
+                  </button>
                 ) : (
                   <div className="text-center space-y-4">
                     <h3 className="text-gray-400">
