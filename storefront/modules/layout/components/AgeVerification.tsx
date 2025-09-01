@@ -81,12 +81,14 @@ export default function AgeVerification() {
             ) : (
               <div className="mt-5">
                 {isMobile ? (
-                  <a
+                  <button
                     className="rounded-md border border-transparent bg-red-600 py-3 px-4 text-base font-medium text-white shadow-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 focus:ring-offset-slate-50"
-                    href={verificationRequest.verificationDeepLink}
+                    onClick={() =>
+                      window.open(verificationRequest.verificationDeepLink)
+                    }
                   >
                     Beta ID mit Swiyu vorweisen
-                  </a>
+                  </button>
                 ) : (
                   <button onClick={check}>
                     <svg
