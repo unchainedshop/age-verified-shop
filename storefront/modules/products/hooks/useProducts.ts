@@ -29,6 +29,7 @@ const useProducts = ({ limit = 50 } = {}) => {
       limit,
       userId: user?._id,
     },
+    skip: !user?._id,
   });
 
   return {

@@ -39,11 +39,7 @@ export const ASSORTMENT_PRODUCTS_QUERY = gql`
 `;
 
 const useAssortmentProducts = (
-  {
-    includeLeaves,
-    slugs,
-  }: { includeLeaves: boolean; slugs: string[] | string } = {
-    includeLeaves: true,
+  { slugs }: { slugs: string[] | string } = {
     slugs: [],
   },
 ) => {
@@ -53,7 +49,6 @@ const useAssortmentProducts = (
     {
       variables: {
         userId: user?._id,
-        includeLeaves,
         slugs,
         offset: 0,
         limit: 10,
@@ -66,7 +61,6 @@ const useAssortmentProducts = (
     fetchMore({
       variables: {
         offset: products.length,
-        includeLeaves,
         slugs,
         limit: 10,
       },

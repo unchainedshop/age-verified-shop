@@ -13,6 +13,9 @@ import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';
 import connectREST from './api/rest/index.ts';
 
 import './plugins/age-restriction.ts';
+import { FilterDirector } from "@unchainedshop/core";
+
+
 
 const fastify = Fastify({
   loggerInstance: unchainedLogger("fastify"),
@@ -21,6 +24,9 @@ const fastify = Fastify({
 });
 
 try {
+  FilterDirector.unregisterAdapter("shop.unchained.filters.strict-qual");
+  FilterDirector.unregisterAdapter("shop.unchained.filters.local-search");
+  
   const platform = await startPlatform({
     modules: defaultModules,
     healthCheckEndpoint: "/.well-known/yoga/server-health",

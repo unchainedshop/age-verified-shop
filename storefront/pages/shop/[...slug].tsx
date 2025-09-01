@@ -21,7 +21,6 @@ const CategoryDetail = () => {
     loading: productsLoading,
   } = useAssortmentProducts({
     slugs: slug,
-    includeLeaves: true,
   });
   return (
     <>
