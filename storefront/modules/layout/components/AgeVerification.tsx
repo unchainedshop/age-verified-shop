@@ -13,7 +13,7 @@ const QRCODE_LEVEL = 'Q';
 const QRCODE_BORDER = 4;
 
 export default function AgeVerification() {
-  const [isMobile, setMobile] = useState(undefined);
+  const [isMobile, setMobile] = useState(false); // useState(undefined);
   const { user, loading, refetch } = useUser();
   const { checkAgeVerification } = useCheckAgeVerification();
   const { verificationRequest, reset } = useRequestAgeVerification({
@@ -41,15 +41,15 @@ export default function AgeVerification() {
     }
   }, [verificationRequest, refetch, loading]);
 
-  useEffect(() => {
-    if (
-      /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
-    ) {
-      setMobile(true);
-    } else {
-      setMobile(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (
+  //     /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
+  //   ) {
+  //     setMobile(true);
+  //   } else {
+  //     setMobile(false);
+  //   }
+  // }, []);
 
   const { path, viewBox } = useQRCodeGenerator(
     verificationRequest?.verificationDeepLink,
