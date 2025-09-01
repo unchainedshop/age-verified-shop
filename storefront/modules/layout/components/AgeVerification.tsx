@@ -13,7 +13,7 @@ const QRCODE_LEVEL = 'Q';
 const QRCODE_BORDER = 4;
 
 export default function AgeVerification() {
-  const [isMobile, setMobile] = useState(false); // useState(undefined);
+  const [isMobile, setMobile] = useState(undefined);
   const { user, loading, refetch } = useUser();
   const { checkAgeVerification } = useCheckAgeVerification();
   const { verificationRequest, reset } = useRequestAgeVerification({
@@ -41,15 +41,19 @@ export default function AgeVerification() {
     }
   }, [verificationRequest, refetch, loading]);
 
-  // useEffect(() => {
-  //   if (
-  //     /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
-  //   ) {
-  //     setMobile(true);
-  //   } else {
-  //     setMobile(false);
-  //   }
-  // }, []);
+  useEffect(() => {
+    console.log(navigator);
+  }, []);
+
+  useEffect(() => {
+    if (
+      /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
+    ) {
+      setMobile(true);
+    } else {
+      setMobile(false);
+    }
+  }, []);
 
   const { path, viewBox } = useQRCodeGenerator(
     verificationRequest?.verificationDeepLink,
@@ -92,9 +96,14 @@ export default function AgeVerification() {
                 {isMobile ? (
                   <button
                     className="rounded-md border border-transparent bg-red-600 py-3 px-4 text-base font-medium text-white shadow-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 focus:ring-offset-slate-50"
-                    onClick={() =>
-                      window.open(verificationRequest.verificationDeepLink)
-                    }
+                    onClick={async () => {
+                      const updatedRequest = await checkAgeVerification(
+                        verificationRequest?._id,
+                      );
+                      if (updatedRequest.state === 'PENDING') {
+                        window.open(verificationRequest.verificationDeepLink);
+                      }
+                    }}
                   >
                     Beta ID mit Swiyu vorweisen
                   </button>
