@@ -19,7 +19,11 @@ const nextJsConfig = {
     disableEmailSupport: !!DISABLE_EMAIL_PROCESSES,
   },
   images: {
-    domains: ["prod-eidch-hcms-sdweb.imgix.net"],
+    domains: [
+      "prod-eidch-hcms-sdweb.imgix.net",
+      "developer.apple.com",
+      "play.google.com"
+    ],
   },
   i18n: {
     locales: ["en", "de"],
