@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({
   hasHeroSection = false,
   heroSectionId = 'hero-section',
 }) => {
-  const { user } = useUser();
+  const { user, loading } = useUser();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { isCartOpen } = useAppContext();
 
@@ -35,7 +35,7 @@ const Layout: React.FC<LayoutProps> = ({
 
   const isAgeVerified = user?.ageVerification?.status;
 
-  if (!isAgeVerified) {
+  if (!isAgeVerified && !loading) {
     return (
       <>
         <Header onSidebarToggle={null} hasHeroSection={false} />

@@ -3,7 +3,7 @@ import useQRCodeGenerator from 'react-hook-qrcode-svg';
 import Loading from '../../common/components/Loading';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useUser from '../../auth/hooks/useUser';
 import useLoginAsGuest from '../../auth/hooks/useLoginAsGuest';
 import useCheckAgeVerification from '../../auth/hooks/useCheckAgeVerification';
@@ -13,6 +13,7 @@ const QRCODE_LEVEL = 'Q';
 const QRCODE_BORDER = 4;
 
 export default function AgeVerification() {
+  const [isMobile, setMobile] = useState(undefined);
   const { user, loading, refetch } = useUser();
   const { checkAgeVerification } = useCheckAgeVerification();
   const { verificationRequest, reset } = useRequestAgeVerification({
@@ -40,6 +41,16 @@ export default function AgeVerification() {
     }
   }, [verificationRequest, refetch, loading]);
 
+  useEffect(() => {
+    if (
+      /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
+    ) {
+      setMobile(true);
+    } else {
+      setMobile(false);
+    }
+  }, []);
+
   const { path, viewBox } = useQRCodeGenerator(
     verificationRequest?.verificationDeepLink,
     QRCODE_LEVEL,
@@ -50,6 +61,8 @@ export default function AgeVerification() {
     checkAgeVerification(verificationRequest?._id);
   };
 
+  if (isMobile === undefined) return <Loading />;
+
   return (
     <div>
       <div className="sm:flex sm:items-center sm:justify-center flex-col mt-5">
@@ -57,7 +70,6 @@ export default function AgeVerification() {
         sehen darfst
         {verificationRequest ? (
           <>
-            <Loading>Scan den QR Code mit der swiyu App</Loading>
             {verificationRequest?.state === 'FAILED' ? (
               <button
                 type="button"
@@ -67,17 +79,28 @@ export default function AgeVerification() {
                 Erneut versuchen (mit Papa's Handy? 😉)
               </button>
             ) : (
-              <button onClick={check}>
-                <svg
-                  width={QRCODE_SIZE}
-                  height={QRCODE_SIZE}
-                  viewBox={viewBox}
-                  stroke="none"
-                >
-                  <rect width="100%" height="100%" fill="#ffffff" />
-                  <path d={path} fill="#000000" />
-                </svg>
-              </button>
+              <div className="mt-5">
+                {isMobile ? (
+                  <a
+                    className="rounded-md border border-transparent bg-red-600 py-3 px-4 text-base font-medium text-white shadow-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 focus:ring-offset-slate-50"
+                    href={verificationRequest.verificationDeepLink}
+                  >
+                    Beta ID mit Swiyu vorweisen
+                  </a>
+                ) : (
+                  <button onClick={check}>
+                    <svg
+                      width={QRCODE_SIZE}
+                      height={QRCODE_SIZE}
+                      viewBox={viewBox}
+                      stroke="none"
+                    >
+                      <rect width="100%" height="100%" fill="#ffffff" />
+                      <path d={path} fill="#000000" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             )}
           </>
         ) : (
