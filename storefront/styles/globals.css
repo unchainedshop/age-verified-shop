@@ -64,3 +64,9 @@
   width: 100% !important;
   line-height: 1.15;
 }
+
+.button--swiyu {
+  background-image: linear-gradient(to right, #eb0273, #f0172f);
+  color: white;
+  max-width: 220px;
+}

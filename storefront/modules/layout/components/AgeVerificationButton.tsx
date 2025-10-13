@@ -23,9 +23,11 @@ export default function AgeVerificationButton({
 
   return isMobile ? (
     <Link href={verificationRequest?.verificationDeepLink}>
-      <Button>Jetzt verifizieren</Button>
+      <Button className="button--swiyu">Jetzt verifizieren</Button>
     </Link>
   ) : (
-    <Button onClick={onOpenModal}>Jetzt verifizieren</Button>
+    <Button className="button--swiyu" onClick={onOpenModal}>
+      Jetzt verifizieren
+    </Button>
   );
 }

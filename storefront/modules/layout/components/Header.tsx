@@ -1,15 +1,10 @@
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useIntl } from 'react-intl';
 import { useState, useEffect } from 'react';
 import { Bars3Icon } from '@heroicons/react/20/solid';
 import LoginCart from '../../auth/components/LoginCart';
 import SideCart from '../../cart/components/SideCart';
-
-const AgeVerification = dynamic(() => import('./AgeVerification'), {
-  ssr: false,
-});
 
 import { useAppContext } from '../../common/components/AppContextWrapper';
 
@@ -95,8 +90,6 @@ const Header: React.FC<HeaderProps> = ({
               })}
             </Link>
           </div>
-
-          <AgeVerification />
 
           <div className="flex justify-end">
             <div

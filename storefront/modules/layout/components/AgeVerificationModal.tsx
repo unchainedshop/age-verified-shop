@@ -31,7 +31,7 @@ export default function AgeVerificationModal({ verificationRequest, onReset }) {
         role="dialog"
         aria-modal="true"
       >
-        <div className="fixed inset-0 bg-white bg-opacity-75 transition-opacity" />
+        <div className="fixed inset-10 bg-white bg-opacity-75 transition-opacity" />
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="text-center mt-10">
             <h2 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white">

@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Button from '../../common/components/Button';
 import AgeVerificationModal from './AgeVerificationModal';
 import useUser from '../../auth/hooks/useUser';
@@ -55,22 +56,33 @@ export default function AgeVerification() {
 
   if (status) {
     return (
-      <div className="bg-slate-50 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        Your Age has been verified to: {ageApprox}
+      <div className="bg-slate-50 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+        Ihr Alter wurde verifiziert als: {ageApprox}
         <Button
+          className="max-w-[180px]"
           onClick={() => {
             logout().then(() => window.location.reload());
           }}
         >
-          Reset
+          Zurücksetzen
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="bg-slate-50 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      Um alle Produkte anzusehen, müssen Sie Ihr Alter mit Swiyu verifizieren.
+    <div className="bg-slate-50 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+      <Image
+        src="/swiyu-logo.png"
+        alt="Swiyu Logo"
+        width={48}
+        height={48}
+        className="rounded-md"
+      />
+      <p>
+        <b>e-ID Altersprüfung: </b>Mit Swiyu Ihr Alter bestätigen und alle
+        Produkte sehen.
+      </p>
       <AgeVerificationButton
         verificationRequest={verificationRequest}
         onOpenModal={() => setIsVerificationModalOpen(true)}

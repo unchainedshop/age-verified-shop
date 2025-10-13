@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Footer from './Footer';
 import Header from './Header';
 import SidebarNavigation from './SidebarNavigation';
 import SideCart from '../../cart/components/SideCart';
 import { useAppContext } from '../../common/components/AppContextWrapper';
 import useUser from '../../auth/hooks/useUser';
+const AgeVerification = dynamic(() => import('./AgeVerification'), {
+  ssr: false,
+});
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -36,6 +40,8 @@ const Layout: React.FC<LayoutProps> = ({
         hasHeroSection={hasHeroSection}
         heroSectionId={heroSectionId}
       />
+      <AgeVerification />
+
       <main className="container mx-auto px-4 sm:px-6 lg:px-8">{children}</main>
       <Footer />
       <SidebarNavigation isOpen={isSidebarOpen} onClose={handleSidebarClose} />
