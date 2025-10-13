@@ -31,9 +31,9 @@ const Home = () => {
           id="hero-section"
           className="relative w-screen ml-[calc(-50vw+50%)]"
         >
-          <div className="relative h-[60vh] lg:h-[40vh] xl:h-[25vh] w-full">
+          <div className="relative h-[30vh] lg:h-[40vh] w-full">
             <Image
-              src="hero.png"
+              src="cover.png"
               fill
               style={{
                 objectFit: 'cover',
