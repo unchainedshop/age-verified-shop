@@ -8,12 +8,14 @@ export const LOG_OUT_MUTATION = gql`
   }
 `;
 
-const useLogoutMutation = () => {
+const useLogout = () => {
   const client = useApolloClient();
   const [logoutMutation] = useMutation(LOG_OUT_MUTATION);
 
   const logout = async () => {
-    const result = await logoutMutation();
+    const result = await logoutMutation({
+      awaitRefetchQueries: true,
+    });
     client.resetStore();
     return result;
   };
@@ -23,4 +25,4 @@ const useLogoutMutation = () => {
   };
 };
 
-export default useLogoutMutation;
+export default useLogout;

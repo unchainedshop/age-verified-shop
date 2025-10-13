@@ -23,7 +23,7 @@ export default [
     }
 
     type Subscription {
-      requestAgeVerification: SwiyuVerifierManagementResponse!
+      requestAgeVerification(force: Boolean): SwiyuVerifierManagementResponse!
     }
   `,
 ];

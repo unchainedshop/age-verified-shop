@@ -5,7 +5,7 @@ import { pubSub } from "../bus.ts";
 const { SWIYU_VERIFIER_ENDPOINT } = process.env;
 
 export default {
-  subscribe: async function (root: unknown, _: never, context: Context) {
+  subscribe: async function (root: unknown, { force }: never, context: Context) {
     const { user, userId } = context;
     log(`subscription requestAgeVerification`, { userId });
 
@@ -25,11 +25,11 @@ export default {
         );
         if (response.status === 200) {
           const data = await response.json();
-          if (data.state === "PENDING") {
-            const subscription = pubSub.subscribe(`verifier-response:${data.id}`);
+          const subscription = pubSub.subscribe(`verifier-response:${data.id}`);
             setTimeout(() => {
               pubSub.publish(`verifier-response:${data.id}`, data);
             }, 100);
+          if (data.state === "PENDING" || !force) {
             return subscription;
           }
         }
@@ -64,11 +64,6 @@ export default {
                   "kb-jwt_alg_values": ["ES256"],
                 },
               },
-              // format: {
-              //   ldp_vc: {
-              //     proof_type: ["Ed25519Signature2018"],
-              //   },
-              // },
               constraints: {
                 fields: [
                   {

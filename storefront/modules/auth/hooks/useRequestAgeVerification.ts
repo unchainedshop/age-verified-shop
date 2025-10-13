@@ -6,18 +6,19 @@ const useRequestAgeVerification = ({
   const [data, setData] = useState<any>(null);
   const sourceRef = useRef<EventSource | null>(null);
 
-  const createEventSource = useCallback(() => {
-    const uri =
-      typeof window === 'undefined'
-        ? process.env.UNCHAINED_ENDPOINT || 'http://localhost:4010/graphql'
-        : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
-          `${window.origin}/graphql`;
+  const createEventSource = useCallback(
+    (force) => {
+      const uri =
+        typeof window === 'undefined'
+          ? process.env.UNCHAINED_ENDPOINT || 'http://localhost:4010/graphql'
+          : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+            `${window.origin}/graphql`;
 
-    const url = new URL(`${uri}`);
-    url.searchParams.append(
-      'query',
-      `subscription RequestAgeVerification {
-        requestAgeVerification {
+      const url = new URL(`${uri}`);
+      url.searchParams.append(
+        'query',
+        `subscription RequestAgeVerification($force: Boolean) {
+        requestAgeVerification(force: $force) {
           _id
           state
           verificationLink
@@ -25,31 +26,34 @@ const useRequestAgeVerification = ({
           presentationDefinition
         }
       }`,
-    );
+      );
+      url.searchParams.append('variables', JSON.stringify({ force }));
 
-    const source = new EventSource(url, {
-      withCredentials: true,
-    });
+      const source = new EventSource(url, {
+        withCredentials: true,
+      });
 
-    source.addEventListener('next', (event: MessageEvent) => {
-      try {
-        const parsed = JSON.parse(event.data);
-        setData(parsed?.data?.requestAgeVerification || parsed?.data);
-      } catch (err) {
-        console.error('Failed to parse event data:', err);
-      }
-    });
+      source.addEventListener('next', (event: MessageEvent) => {
+        try {
+          const parsed = JSON.parse(event.data);
+          setData(parsed?.data?.requestAgeVerification || parsed?.data);
+        } catch (err) {
+          console.error('Failed to parse event data:', err);
+        }
+      });
 
-    source.addEventListener('error', (e) => {
-      console.error(e);
-    });
+      source.addEventListener('error', (e) => {
+        console.error(e);
+      });
 
-    source.addEventListener('complete', () => {
-      source.close();
-    });
+      source.addEventListener('complete', () => {
+        source.close();
+      });
 
-    return source;
-  }, [setData]);
+      return source;
+    },
+    [setData],
+  );
 
   useEffect(() => {
     if (skip) return;
@@ -62,7 +66,7 @@ const useRequestAgeVerification = ({
 
   const reset = () => {
     sourceRef.current?.close();
-    sourceRef.current = createEventSource();
+    sourceRef.current = createEventSource(true);
     setData(null);
   };
 

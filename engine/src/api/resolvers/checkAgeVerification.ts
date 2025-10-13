@@ -1,9 +1,15 @@
+import { log } from "@unchainedshop/logger";
 import type { Context } from "@unchainedshop/api";
 import { pubSub } from "../bus.ts";
 
 const { SWIYU_VERIFIER_ENDPOINT } = process.env;
 
-export default async function checkAgeVerification(root: never, { requestId }, context: Context) {
+export default async function checkAgeVerification(root: never, { requestId: forcedRequestId }, context: Context) {
+  const { user, userId } = context;
+  log(`mutation checkAgeVerification`, { userId });
+
+  const requestId = (user?.meta?.ageVerification?.requestId) ? user.meta.ageVerification.requestId : forcedRequestId;
+
   const response = await fetch(
       `${SWIYU_VERIFIER_ENDPOINT}/verifications/${requestId}`,
       {
@@ -20,13 +26,13 @@ export default async function checkAgeVerification(root: never, { requestId }, c
     }
     const data = await response.json();
 
-    const user = await context.modules.users.findUser({
+    const updatedUser = await context.modules.users.findUser({
       "meta.ageVerification.requestId": requestId,
       includeGuests: true,
     });
 
     if (data.state === "SUCCESS") {
-      await context.modules.users.updateProfile(user._id, {
+      await context.modules.users.updateProfile(updatedUser._id, {
         meta: {
           ageVerification: {
             requestId: requestId,

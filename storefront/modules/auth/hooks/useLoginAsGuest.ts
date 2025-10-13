@@ -14,6 +14,7 @@ const useLoginAsGuest = () => {
   const [loginAsGuestMutation, props] = useMutation(LOGIN_AS_GUEST_MUTATION);
 
   const loginAsGuest = async () => {
+    console.log('Logging in as guest...');
     const result = await loginAsGuestMutation({
       awaitRefetchQueries: true,
     });
