@@ -41,13 +41,29 @@ export default function AgeVerification() {
     }
   }, [verificationRequest, apollo, status, loading]);
 
+  const userAge16Verified = user?.ageVerification?.age_over_16 === 'true';
+  const userAge18Verified = user?.ageVerification?.age_over_18 === 'true';
+
+  let ageApprox = '18+';
+  if (userAge16Verified && !userAge18Verified) {
+    ageApprox = '16-17';
+  } else if (!userAge16Verified) {
+    ageApprox = '<16';
+  }
+
   if (loading && !user) return null;
 
   if (status) {
     return (
       <div className="bg-slate-50 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        Ihr Alter wurde verifiziert. Sie können alle Produkte ansehen.
-        <Button onClick={() => logout()}>Zurücksetzen</Button>
+        Your Age has been verified to: {ageApprox}
+        <Button
+          onClick={() => {
+            logout().then(() => window.location.reload());
+          }}
+        >
+          Reset
+        </Button>
       </div>
     );
   }

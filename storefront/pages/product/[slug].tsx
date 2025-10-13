@@ -18,6 +18,8 @@ import classNames from 'classnames';
 import useUser from '../../modules/auth/hooks/useUser';
 import useConditionalBookmarkProduct from '../../modules/cart/hooks/useConditionalBookmarkProduct';
 import useRemoveBookmark from '../../modules/common/hooks/useRemoveBookmark';
+import useProductAgeCheck from '../../modules/products/hooks/useProductAgeCheck';
+import AgeRestrictedContent from '../../modules/auth/components/AgeRestrictedContent';
 
 const Detail = () => {
   const router = useRouter();
@@ -28,6 +30,13 @@ const Detail = () => {
   const { conditionalBookmarkProduct } = useConditionalBookmarkProduct();
   const { removeBookmark } = useRemoveBookmark();
   const { user } = useUser();
+
+  const {
+    isRestricted,
+    loading: ageLoading,
+    isAllowed,
+  } = useProductAgeCheck(product);
+  const showMilkGlassEffect = ageLoading ? isRestricted : !isAllowed;
 
   const [filteredBookmark] =
     user?.bookmarks?.filter(
@@ -55,90 +64,93 @@ const Detail = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="container mx-auto py-8">
-          <div className="mb-6">
-            <AssortmentBreadcrumbs
-              paths={productPath}
-              currentAssortment={product?.texts}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Product Images */}
-            <div className="w-full">
-              <ImageGallery
-                lazyLoad
-                onErrorImageURL="/static/img/sun-glass-placeholder.jpeg"
-                useBrowserFullscreen
-                showThumbnails={getMediaUrls(product).length > 1}
-                showPlayButton={getMediaUrls(product).length > 1}
-                items={getMediaUrls(product).map((image) => ({
-                  original: image,
-                  thumbnail: image,
-                }))}
+        <AgeRestrictedContent restricted={showMilkGlassEffect}>
+          <div className="container mx-auto py-8">
+            <div className="mb-6">
+              <AssortmentBreadcrumbs
+                paths={productPath}
+                currentAssortment={product?.texts}
               />
             </div>
 
-            {/* Product Details */}
-            <div className="flex flex-col space-y-6">
-              <div>
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <h1
-                      className="text-2xl lg:text-3xl font-semibold text-slate-900 dark:text-white mb-2"
-                      dangerouslySetInnerHTML={{
-                        __html: product?.texts?.title,
-                      }}
-                    />
-                    <h2
-                      className="text-lg text-slate-600 dark:text-slate-300 mb-4"
-                      dangerouslySetInnerHTML={{
-                        __html: product?.texts?.subtitle,
-                      }}
-                    />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              {/* Product Images */}
+              <div className="w-full">
+                <ImageGallery
+                  lazyLoad
+                  onErrorImageURL="/static/img/sun-glass-placeholder.jpeg"
+                  useBrowserFullscreen
+                  showThumbnails={getMediaUrls(product).length > 1}
+                  showPlayButton={getMediaUrls(product).length > 1}
+                  items={getMediaUrls(product).map((image) => ({
+                    original: image,
+                    thumbnail: image,
+                  }))}
+                />
+              </div>
+
+              {/* Product Details */}
+              <div className="flex flex-col space-y-6">
+                <div>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <h1
+                        className="text-2xl lg:text-3xl font-semibold text-slate-900 dark:text-white mb-2"
+                        dangerouslySetInnerHTML={{
+                          __html: product?.texts?.title,
+                        }}
+                      />
+                      <h2
+                        className="text-lg text-slate-600 dark:text-slate-300 mb-4"
+                        dangerouslySetInnerHTML={{
+                          __html: product?.texts?.subtitle,
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="rounded-full bg-white/90 p-3 shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:shadow-lg dark:bg-slate-900/90"
+                      onClick={() =>
+                        filteredBookmark
+                          ? removeBookmark({
+                              bookmarkId: filteredBookmark?._id,
+                            })
+                          : conditionalBookmarkProduct({
+                              productId: product?._id,
+                            })
+                      }
+                      aria-label={
+                        filteredBookmark
+                          ? 'Remove from bookmarks'
+                          : 'Add to bookmarks'
+                      }
+                    >
+                      <BookmarkIcon
+                        className={classNames('h-5 w-5 transition-colors', {
+                          'text-amber-500 hover:text-amber-600':
+                            filteredBookmark,
+                          'text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white':
+                            !filteredBookmark,
+                        })}
+                      />
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    className="rounded-full bg-white/90 p-3 shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:shadow-lg dark:bg-slate-900/90"
-                    onClick={() =>
-                      filteredBookmark
-                        ? removeBookmark({
-                            bookmarkId: filteredBookmark?._id,
-                          })
-                        : conditionalBookmarkProduct({
-                            productId: product?._id,
-                          })
-                    }
-                    aria-label={
-                      filteredBookmark
-                        ? 'Remove from bookmarks'
-                        : 'Add to bookmarks'
-                    }
-                  >
-                    <BookmarkIcon
-                      className={classNames('h-5 w-5 transition-colors', {
-                        'text-amber-500 hover:text-amber-600': filteredBookmark,
-                        'text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white':
-                          !filteredBookmark,
-                      })}
-                    />
-                  </button>
+                  <div className="text-2xl lg:text-3xl font-semibold text-slate-900 dark:text-white mb-6">
+                    <ProductPrice product={product} />
+                  </div>
                 </div>
-                <div className="text-2xl lg:text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-                  <ProductPrice product={product} />
+
+                <div className="prose prose-gray dark:prose-invert max-w-none">
+                  <Markdown>{product?.texts?.description}</Markdown>
                 </div>
-              </div>
 
-              <div className="prose prose-gray dark:prose-invert max-w-none">
-                <Markdown>{product?.texts?.description}</Markdown>
-              </div>
-
-              <div className="pt-4">
-                <AddToCartButton productId={product?._id} {...product} />
+                <div className="pt-4">
+                  <AddToCartButton productId={product?._id} {...product} />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </AgeRestrictedContent>
       )}
     </>
   );

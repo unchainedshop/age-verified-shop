@@ -57,7 +57,7 @@ import EmailField from '../modules/forms/components/EmailField';
 import PasswordField from '../modules/forms/components/PasswordField';
 import SelectField from '../modules/forms/components/SelectField';
 import FormattedPrice from '../modules/common/components/FormattedPrice';
-import ProductListItem from '../modules/products/components/ProductListItem';
+import ProductListItem from '../modules/products/components/ProductListItemCard';
 import CartItem from '../modules/cart/components/CartItem';
 import AddToCartButton from '../modules/cart/components/AddToCartButton';
 import NoData from '../modules/common/components/NoData';

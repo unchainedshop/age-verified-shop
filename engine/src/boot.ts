@@ -3,10 +3,10 @@ import { startPlatform } from "@unchainedshop/platform";
 import {
   connect,
   unchainedLogger,
+  fastifyRouter,
 } from "@unchainedshop/api/lib/fastify/index.js";
 import defaultModules from "@unchainedshop/plugins/presets/all.js";
 import connectDefaultPluginsToFastify from "@unchainedshop/plugins/presets/all-fastify.js";
-import { fastifyRouter } from "@unchainedshop/admin-ui/fastify";
 import typeDefs from "./api/schema.ts";
 import resolvers from "./api/resolvers/index.ts";
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';

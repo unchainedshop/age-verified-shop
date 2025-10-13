@@ -4,6 +4,7 @@ import ProductPriceFragment from './ProductPriceFragment';
 const ProductDetailFragment = gql`
   fragment ProductDetails on Product {
     _id
+    tags
     media {
       _id
       file {

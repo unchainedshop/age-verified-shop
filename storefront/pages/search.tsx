@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 import MetaTags from '../modules/common/components/MetaTags';
 import useProducts from '../modules/products/hooks/useProducts';
-import ProductListItem from '../modules/products/components/ProductListItem';
+import ProductListItem from '../modules/products/components/ProductListItemCard';
 import Loading from '../modules/common/components/Loading';
 
 const Search = () => {
