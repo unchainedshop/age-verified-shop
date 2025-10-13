@@ -22,7 +22,7 @@ pipeline {
     stage('Build Engine') {
         steps{
             script {
-                engine = docker.build("registry.ucc.dev/age-verified-shop/engine:$GIT_COMMIT","-f ./engine/Dockerfile ./engine")
+                engine = docker.build("registry.ucc.dev/unchained/age-verified-shop/engine:$GIT_COMMIT","-f ./engine/Dockerfile ./engine")
                 engine.push("stable")
             }
         }
@@ -34,7 +34,7 @@ pipeline {
                 NEXT_PUBLIC_GRAPHQL_ENDPOINT = 'https://swiyu.unchained.wtf/graphql'
                 UNCHAINED_ENDPOINT = 'https://swiyu.unchained.wtf/graphql'
 
-                storefront = docker.build("registry.ucc.dev/age-verified-shop/storefront:$GIT_COMMIT-main",
+                storefront = docker.build("registry.ucc.dev/unchained/age-verified-shop/storefront:$GIT_COMMIT-main",
                 "--build-arg NEXT_PUBLIC_GRAPHQL_ENDPOINT=${NEXT_PUBLIC_GRAPHQL_ENDPOINT} " +
                 "--build-arg UNCHAINED_ENDPOINT=${UNCHAINED_ENDPOINT} " +
                 "-f ./storefront/Dockerfile ./storefront")
