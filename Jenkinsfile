@@ -1,10 +1,7 @@
 pipeline {
-  agent {
-    label "docker-agent-local" // Using docker-agent-local here which uses the docker endpoint of the current machine so we have access to volumes between stages
-  }
+  agent any
   environment {
-    DOCKER_BUILDKIT = 1
-    REGISTRY_AUTH = credentials('eec0f0c2-9b9d-4b26-8da5-58222499d901')
+    REGISTRY_AUTH = credentials('ucc-registry-unchained')
   }
   tools { dockerTool "docker" }
   stages {
