@@ -7,7 +7,7 @@ const useRequestAgeVerification = ({
   const sourceRef = useRef<EventSource | null>(null);
 
   const createEventSource = useCallback(
-    (force) => {
+    (force?: boolean) => {
       const uri =
         typeof window === 'undefined'
           ? process.env.UNCHAINED_ENDPOINT || 'http://localhost:4010/graphql'
