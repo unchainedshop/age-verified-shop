@@ -37,7 +37,7 @@ export default async function swiyuCallbackHandler(
       includeGuests: true,
     });
 
-    if (data.state === "SUCCESS") {
+    if (data.state === "SUCCESS" && user) {
       await request.unchainedContext.modules.users.updateProfile(user._id, {
         meta: {
           ageVerification: {

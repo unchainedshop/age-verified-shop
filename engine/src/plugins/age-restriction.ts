@@ -27,7 +27,7 @@ const AgeRestriction: IFilterAdapter = {
         if (!assortmentIds) return assortmentIds;
 
         const user = await context.modules.users.findUserById(userId);
-        if (!user.meta?.ageVerification) return assortmentIds;
+        if (!user.meta?.ageVerification?.status) return assortmentIds;
 
         const isAge16OrAbove = user.meta?.ageVerification?.age_over_16 === 'true';
         const isAge18OrAbove = user.meta?.ageVerification?.age_over_18 === 'true';
@@ -63,7 +63,7 @@ const AgeRestriction: IFilterAdapter = {
         const productIds = params.productIds || (await context.modules.products.findProductIds({}));
 
         const user = await context.modules.users.findUserById(userId);
-        if (!user.meta?.ageVerification) return productIds;
+        if (!user.meta?.ageVerification?.status) return productIds;
 
         const isAge16OrAbove = user.meta?.ageVerification?.age_over_16 === 'true';
         const isAge18OrAbove = user.meta?.ageVerification?.age_over_18 === 'true';
