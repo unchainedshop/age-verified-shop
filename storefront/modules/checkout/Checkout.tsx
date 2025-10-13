@@ -125,9 +125,7 @@ const Checkout = () => {
   if (error) return <ErrorMessage message="Error loading cart" />;
   if (!data?.me?.cart) return <div>Loading</div>;
 
-  const isAddressesMissing =
-    !data.me.cart.delivery?.address?.firstName &&
-    !data.me.cart.billingAddress?.firstName;
+  const isAddressesMissing = false;
   const isContactDataMissing =
     !data.me.cart.contact?.emailAddress && !emailSupportDisabled;
 
@@ -161,10 +159,10 @@ const Checkout = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Forms - Left Side */}
         <div className="lg:col-span-2 space-y-8">
-          <CheckoutAddresses
+          {/* <CheckoutAddresses
             cart={data.me.cart}
             isInitial={isAddressesMissing}
-          />
+          /> */}
           {!isAddressesMissing && (
             <CheckoutContact
               cart={data.me.cart}

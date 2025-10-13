@@ -17,13 +17,21 @@ const CheckoutContact = ({ cart, isInitial }) => {
 
   const updateContact = async (contactInfo) => {
     try {
-      if (contactInfo.emailAddress)
+      if (
+        contactInfo.emailAddress &&
+        cart.contact?.emailAddress !== contactInfo.emailAddress
+      )
         await addEmail({
           email: contactInfo.emailAddress,
         });
 
       await updateCartContact({
-        contact: contactInfo,
+        contact: {
+          emailAddress: contactInfo.emailAddress,
+        },
+        meta: {
+          comment: contactInfo.comment || '',
+        },
       });
       setShowLogin(false);
       setEditMode(false);
@@ -89,6 +97,7 @@ const CheckoutContact = ({ cart, isInitial }) => {
       {editMode ? (
         <ContactForm
           contact={contact}
+          comment={cart.meta?.comment || ''}
           onSubmit={updateContact}
           onCancel={toggleEditMode}
         />

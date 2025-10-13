@@ -10,7 +10,7 @@ import FormErrors from '../forms/components/FormErrors';
 import Toggle from '../common/components/Toggle';
 import usePushNotification from '../context/push-notification/usePushNotification';
 
-const ContactForm = ({ contact, onSubmit, onCancel }) => {
+const ContactForm = ({ contact, comment, onSubmit, onCancel }) => {
   const { formatMessage } = useIntl();
   const { isSubscribed, subscribe, unsubscribe, disabledForCurrentBrowser } =
     usePushNotification();
@@ -34,7 +34,7 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
     <Form
       onSubmit={submitHandler}
       onSubmitError={onSubmitError}
-      defaultValues={{ ...contact }}
+      defaultValues={{ ...contact, comment }}
       className="space-y-6"
     >
       <TextField
@@ -49,13 +49,13 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
 
       <TextField
         label={formatMessage({
-          id: 'telNumber',
-          defaultMessage: 'Mobile Phone',
+          id: 'comment',
+          defaultMessage: 'Grusswort oder Rant über unser Produkt',
         })}
-        name="telNumber"
-        type="tel"
+        name="comment"
+        type="text"
       />
-
+      {/* 
       <Toggle
         className=""
         onToggle={() => {
@@ -65,7 +65,7 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
         toggleKey=""
         active={localNotificationSubscribed}
         disabled={false}
-      />
+      /> */}
 
       <FormErrors />
 
