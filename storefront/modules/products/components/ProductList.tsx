@@ -22,7 +22,10 @@ const ProductList = ({
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 gap-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
-              <div key={`grid-${product?._id}`} className="group relative">
+              <div
+                key={`grid-${product?._id}`}
+                className="group relative scroll-scale-in"
+              >
                 <ProductListItem product={product} />
               </div>
             ))}
@@ -32,7 +35,7 @@ const ProductList = ({
             {products.map((product) => (
               <div
                 key={`list-${product?._id}`}
-                className="group relative bg-white border border-slate-200 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg dark:bg-slate-900 dark:border-0"
+                className="group relative bg-white border border-slate-200 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg dark:bg-slate-900 dark:border-0 scroll-slide-up"
               >
                 <ProductListItemRow product={product} />
               </div>
