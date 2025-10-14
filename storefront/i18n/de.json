@@ -81,6 +81,7 @@
   "delivery_method": "Versandart",
   "delivery_status": "Lieferstatus",
   "delivery_summary": "Lieferübersicht",
+  "demo_store_notice": "Demo-Shop: Es werden keine echten Bestellungen verarbeitet. Nur zu Demonstrationszwecken.",
   "display_name": "Anzeigename",
   "document": "Dokument",
   "dont-have-account": "Haben Sie kein Konto?",

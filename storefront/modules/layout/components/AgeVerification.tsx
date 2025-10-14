@@ -58,12 +58,14 @@ export default function AgeVerification() {
 
   if (status) {
     return (
-      <div className="bg-slate-50 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
-        {formatMessage({
-          id: 'age_verified_as',
-          defaultMessage: 'Your age has been verified as:',
-        })}{' '}
-        {ageApprox}
+      <div className="bg-slate-50 dark:bg-slate-800 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+        <span className="text-slate-900 dark:text-white">
+          {formatMessage({
+            id: 'age_verified_as',
+            defaultMessage: 'Your age has been verified as:',
+          })}{' '}
+          {ageApprox}
+        </span>
         <Button
           className="max-w-[180px]"
           onClick={() => {
@@ -77,7 +79,7 @@ export default function AgeVerification() {
   }
 
   return (
-    <div className="bg-slate-50 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+    <div className="bg-slate-50 dark:bg-slate-800 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
       <Image
         src="/swiyu-logo.png"
         alt="Swiyu Logo"
@@ -85,7 +87,7 @@ export default function AgeVerification() {
         height={48}
         className="rounded-md"
       />
-      <p>
+      <p className="text-slate-900 dark:text-white">
         <b>
           {formatMessage({
             id: 'age_verification_title',
