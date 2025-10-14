@@ -106,6 +106,7 @@ export default function AgeVerification() {
         <AgeVerificationModal
           verificationRequest={verificationRequest}
           onReset={() => reset()}
+          onClose={() => setIsVerificationModalOpen(false)}
         />
       )}
     </div>

@@ -28,6 +28,14 @@ export default function AgeVerificationButton({
       </Button>
     );
 
+  // Show loading state while checking mobile
+  if (isMobile === undefined)
+    return (
+      <Button disabled>
+        {formatMessage({ id: 'loading', defaultMessage: 'Loading...' })}
+      </Button>
+    );
+
   return isMobile ? (
     <Link href={verificationRequest?.verificationDeepLink}>
       <Button className="button--swiyu">
