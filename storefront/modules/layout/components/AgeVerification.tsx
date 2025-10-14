@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { useIntl } from 'react-intl';
 import Button from '../../common/components/Button';
@@ -10,11 +10,12 @@ import useLoginAsGuest from '../../auth/hooks/useLoginAsGuest';
 import useLogout from '../../auth/hooks/useLogout';
 import AgeVerificationButton from './AgeVerificationButton';
 import { useApolloClient } from '@apollo/client';
+import { useAgeVerificationModal } from '../../auth/contexts/AgeVerificationContext';
 
 export default function AgeVerification() {
   const { formatMessage } = useIntl();
   const apollo = useApolloClient();
-  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
+  const { isModalOpen, openModal, closeModal } = useAgeVerificationModal();
   const { user, loading } = useUser();
   const { verificationRequest, reset } = useRequestAgeVerification({
     skip: !user?._id,
@@ -40,9 +41,9 @@ export default function AgeVerification() {
   useEffect(() => {
     if (!status && verificationRequest?.state === 'SUCCESS' && !loading) {
       apollo.resetStore();
-      setIsVerificationModalOpen(false);
+      closeModal();
     }
-  }, [verificationRequest, apollo, status, loading]);
+  }, [verificationRequest, apollo, status, loading, closeModal]);
 
   const userAge16Verified = user?.ageVerification?.age_over_16 === 'true';
   const userAge18Verified = user?.ageVerification?.age_over_18 === 'true';
@@ -102,13 +103,13 @@ export default function AgeVerification() {
       </p>
       <AgeVerificationButton
         verificationRequest={verificationRequest}
-        onOpenModal={() => setIsVerificationModalOpen(true)}
+        onOpenModal={openModal}
       />
-      {isVerificationModalOpen && (
+      {isModalOpen && (
         <AgeVerificationModal
           verificationRequest={verificationRequest}
           onReset={() => reset()}
-          onClose={() => setIsVerificationModalOpen(false)}
+          onClose={closeModal}
         />
       )}
     </div>
