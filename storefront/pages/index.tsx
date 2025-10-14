@@ -1,4 +1,5 @@
 import { useIntl } from 'react-intl';
+import { useState, useEffect } from 'react';
 
 import Image from 'next/image';
 
@@ -21,6 +22,16 @@ const Home = () => {
     includeLeaves: true,
   });
   const { formatMessage } = useIntl();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
@@ -55,21 +66,29 @@ const Home = () => {
         {/* Hero Section */}
         <section
           id="hero-section"
-          className="relative w-screen ml-[calc(-50vw+50%)]"
+          className="relative w-screen ml-[calc(-50vw+50%)] overflow-hidden"
         >
           <div className="relative h-[30vh] lg:h-[40vh] w-full">
-            <Image
-              src="cover.png"
-              fill
+            <div
+              className="absolute inset-0 w-full h-[200%]"
               style={{
-                objectFit: 'cover',
-                objectPosition: 'top center',
+                transform: `translateY(${scrollY * -1}px) scale(${1 + scrollY * 0.001})`,
+                willChange: 'transform',
               }}
-              quality={100}
-              alt={formatMessage({ id: 'hero', defaultMessage: 'Hero' })}
-              loader={defaultNextImageLoader}
-              priority
-            />
+            >
+              <Image
+                src="cover.png"
+                fill
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'top center',
+                }}
+                quality={100}
+                alt={formatMessage({ id: 'hero', defaultMessage: 'Hero' })}
+                loader={defaultNextImageLoader}
+                priority
+              />
+            </div>
           </div>
         </section>
 
