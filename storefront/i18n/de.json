@@ -147,6 +147,7 @@
   "invalid-credential-error": "Ungültige Anmeldedaten, bitte versuchen Sie es erneut",
   "invalid-token": "Token existiert nicht oder ist abgelaufen",
   "invalid_email_password": "Ungültige E-Mail oder Passwort",
+  "invoice_checkout_warning": "HINWEIS: Dies ist ein Demo-Shop (Proof of Concept), der ein Beta-ID-Verifizierungssystem verwendet. Mit Klick auf \"Bestellung senden\" bestätigst du gar nichts. Du bezahlst nichts und es wird auch nichts geliefert. Capish?",
   "join-now": "Jetzt beitreten",
   "ladies": "Damen",
   "language_de": "Deutsch",

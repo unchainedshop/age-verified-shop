@@ -26,16 +26,16 @@ const InvoiceCheckoutButton = () => {
           padding: '12px',
           marginBottom: '16px',
           fontSize: '1rem',
-          textAlign: 'center',
-          boxShadow: '0 2px 8px rgba(185,28,28,0.08)',
+          textAlign: 'left',
         }}
         role="alert"
         aria-live="assertive"
       >
-        HINWEIS: Dies ist ein Demo-Shop (Proof of Concept), der ein
-        Beta-ID-Verifizierungssystem verwendet. Mit Klick auf &quot;Bestellung
-        senden&quot; bestätigst du gar nichts. Sie bezahlen nichts und es wird
-        auch nichts geliefert. Capish?
+        {formatMessage({
+          id: 'invoice_checkout_warning',
+          defaultMessage:
+            'NOTE: This is a demo shop (Proof of Concept) using a beta ID verification system. By clicking "Send Order" you are not confirming anything. You will not be charged and nothing will be delivered. Capish?',
+        })}
       </div>
       <Button
         type="button"
