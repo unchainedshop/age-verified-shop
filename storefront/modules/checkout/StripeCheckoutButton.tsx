@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 import getConfig from 'next/config';
 import { gql, useMutation } from '@apollo/client';
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
@@ -24,6 +25,7 @@ export const SIGN_STRIPE_MUTATION = gql`
 `;
 
 const StripeCheckoutButton = ({ order }) => {
+  const { formatMessage } = useIntl();
   const [clientSecret, setClientSecret] = useState('');
   const [signStripeMutation] = useMutation(SIGN_STRIPE_MUTATION);
 
@@ -63,7 +65,11 @@ const StripeCheckoutButton = ({ order }) => {
       </Elements>
     );
   }
-  return <div>Loading...</div>;
+  return (
+    <div>
+      {formatMessage({ id: 'loading', defaultMessage: 'Loading...' })}
+    </div>
+  );
 };
 
 export default StripeCheckoutButton;

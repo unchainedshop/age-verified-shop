@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
 interface BookmarkToastProps {
@@ -14,6 +15,7 @@ const BookmarkToast = ({
   onClose,
   message,
 }: BookmarkToastProps) => {
+  const { formatMessage } = useIntl();
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
@@ -34,8 +36,14 @@ const BookmarkToast = ({
   if (!shouldRender) return null;
 
   const defaultMessage = isBookmarked
-    ? 'Added to bookmarks'
-    : 'Removed from bookmarks';
+    ? formatMessage({
+        id: 'bookmark_added',
+        defaultMessage: 'Added to bookmarks',
+      })
+    : formatMessage({
+        id: 'bookmark_removed',
+        defaultMessage: 'Removed from bookmarks',
+      });
 
   return (
     <div

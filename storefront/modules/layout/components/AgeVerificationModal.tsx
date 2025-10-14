@@ -1,5 +1,6 @@
 'use client';
 import useQRCodeGenerator from 'react-hook-qrcode-svg';
+import { useIntl } from 'react-intl';
 import Loading from '../../common/components/Loading';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,6 +12,7 @@ const QRCODE_LEVEL = 'Q';
 const QRCODE_BORDER = 4;
 
 export default function AgeVerificationModal({ verificationRequest, onReset }) {
+  const { formatMessage } = useIntl();
   const { checkAgeVerification } = useCheckAgeVerification();
 
   const { path, viewBox } = useQRCodeGenerator(
@@ -35,7 +37,10 @@ export default function AgeVerificationModal({ verificationRequest, onReset }) {
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="text-center mt-10">
             <h2 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Bitte Alter bestätigen
+              {formatMessage({
+                id: 'age_verification_modal_title',
+                defaultMessage: 'Please confirm your age',
+              })}
             </h2>
           </div>
 
@@ -45,7 +50,10 @@ export default function AgeVerificationModal({ verificationRequest, onReset }) {
                 <div className="text-center space-y-4">
                   <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                     <p className="text-red-800 dark:text-red-300">
-                      Die Verifikation ist fehlgeschlagen
+                      {formatMessage({
+                        id: 'age_verification_failed',
+                        defaultMessage: 'Verification failed',
+                      })}
                     </p>
                   </div>
                   <button
@@ -53,15 +61,21 @@ export default function AgeVerificationModal({ verificationRequest, onReset }) {
                     onClick={onReset}
                     className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
                   >
-                    Erneut versuchen
+                    {formatMessage({
+                      id: 'try_again',
+                      defaultMessage: 'Try again',
+                    })}
                   </button>
                 </div>
               ) : (
                 <div className="space-y-6">
                   <div className="text-center space-y-4">
                     <h3 className="text-gray-400">
-                      Mit der Swiyu-App den QR-Code scannen und Alter
-                      bestätigen, um fortzufahren.
+                      {formatMessage({
+                        id: 'age_verification_qr_instruction',
+                        defaultMessage:
+                          'Scan the QR code with the Swiyu app and confirm your age to continue.',
+                      })}
                     </h3>
                     <button
                       onClick={check}
@@ -98,7 +112,10 @@ export default function AgeVerificationModal({ verificationRequest, onReset }) {
 
             <div className="text-center space-y-3">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Lade die Swiyu App herunter
+                {formatMessage({
+                  id: 'download_swiyu_app',
+                  defaultMessage: 'Download the Swiyu app',
+                })}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                 <Link

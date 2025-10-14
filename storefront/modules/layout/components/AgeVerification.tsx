@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useIntl } from 'react-intl';
 import Button from '../../common/components/Button';
 import AgeVerificationModal from './AgeVerificationModal';
 import useUser from '../../auth/hooks/useUser';
@@ -11,6 +12,7 @@ import AgeVerificationButton from './AgeVerificationButton';
 import { useApolloClient } from '@apollo/client';
 
 export default function AgeVerification() {
+  const { formatMessage } = useIntl();
   const apollo = useApolloClient();
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
   const { user, loading } = useUser();
@@ -57,14 +59,18 @@ export default function AgeVerification() {
   if (status) {
     return (
       <div className="bg-slate-50 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
-        Ihr Alter wurde verifiziert als: {ageApprox}
+        {formatMessage({
+          id: 'age_verified_as',
+          defaultMessage: 'Your age has been verified as:',
+        })}{' '}
+        {ageApprox}
         <Button
           className="max-w-[180px]"
           onClick={() => {
             logout().then(() => window.location.reload());
           }}
         >
-          Zurücksetzen
+          {formatMessage({ id: 'reset', defaultMessage: 'Reset' })}
         </Button>
       </div>
     );
@@ -80,8 +86,17 @@ export default function AgeVerification() {
         className="rounded-md"
       />
       <p>
-        <b>e-ID Altersprüfung: </b>Mit Swiyu Ihr Alter bestätigen und alle
-        Produkte sehen.
+        <b>
+          {formatMessage({
+            id: 'age_verification_title',
+            defaultMessage: 'e-ID Age Verification:',
+          })}{' '}
+        </b>
+        {formatMessage({
+          id: 'age_verification_description',
+          defaultMessage:
+            'Confirm your age with Swiyu and see all products.',
+        })}
       </p>
       <AgeVerificationButton
         verificationRequest={verificationRequest}
