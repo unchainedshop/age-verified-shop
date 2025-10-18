@@ -70,18 +70,18 @@ const Home = () => {
         >
           <div className="relative h-[30vh] lg:h-[40vh] w-full">
             <div
-              className="absolute inset-0 w-full h-[200%]"
+              className="absolute inset-0 w-full h-[200%] lg:h-[160%]"
               style={{
                 transform: `translateY(${scrollY * -1}px) scale(${1 + scrollY * 0.001})`,
                 willChange: 'transform',
               }}
             >
               <Image
-                src="cover.png"
+                src="cover-hero.png"
                 fill
                 style={{
                   objectFit: 'cover',
-                  objectPosition: 'top center',
+                  objectPosition: 'center 100%',
                 }}
                 quality={100}
                 alt={formatMessage({ id: 'hero', defaultMessage: 'Hero' })}

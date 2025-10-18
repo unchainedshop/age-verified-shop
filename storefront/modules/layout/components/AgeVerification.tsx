@@ -58,7 +58,7 @@ export default function AgeVerification() {
 
   if (status) {
     return (
-      <div className="bg-slate-50 dark:bg-slate-800 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+      <div className="sticky top-16 z-[1010] bg-slate-50 dark:bg-slate-800 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
         <span className="text-slate-900 dark:text-white">
           {formatMessage({
             id: 'age_verified_as',
@@ -79,27 +79,28 @@ export default function AgeVerification() {
   }
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-800 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
-      <Image
-        src="/swiyu-logo.png"
-        alt="Swiyu Logo"
-        width={48}
-        height={48}
-        className="rounded-md"
-      />
-      <p className="text-slate-900 dark:text-white">
-        <b>
+    <div className="sticky top-16 z-[1010] bg-slate-50 dark:bg-slate-800 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+      <div className="flex items-center text-pretty gap-3">
+        <Image
+          src="/swiyu-logo.png"
+          alt="Swiyu Logo"
+          width={32}
+          height={32}
+          className="rounded-md"
+        />
+        <p className="text-slate-900 text-sm dark:text-white">
+          <b>
+            {formatMessage({
+              id: 'age_verification_title',
+              defaultMessage: 'e-ID Age Verification:',
+            })}{' '}
+          </b>
           {formatMessage({
-            id: 'age_verification_title',
-            defaultMessage: 'e-ID Age Verification:',
-          })}{' '}
-        </b>
-        {formatMessage({
-          id: 'age_verification_description',
-          defaultMessage:
-            'Confirm your age with Swiyu and see all products.',
-        })}
-      </p>
+            id: 'age_verification_description',
+            defaultMessage: 'Confirm your age with Swiyu and see all products.',
+          })}
+        </p>
+      </div>
       <AgeVerificationButton
         verificationRequest={verificationRequest}
         onOpenModal={() => setIsVerificationModalOpen(true)}

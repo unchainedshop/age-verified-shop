@@ -69,6 +69,7 @@
   background-image: linear-gradient(to right, #eb0273, #f0172f);
   color: white;
   max-width: 220px;
+  max-height: 32px;
 }
 
 /* Scroll-driven animations */
