@@ -312,7 +312,12 @@ const Checkout = () => {
                   </div>
                   <div className="border-t border-slate-200 dark:border-0 pt-4 mt-4">
                     <div className="flex justify-between text-lg font-medium text-slate-900 dark:text-white">
-                      <span>Gesamtsumme</span>
+                      <span>
+                        {formatMessage({
+                          id: 'total',
+                          defaultMessage: 'Total',
+                        })}
+                      </span>
                       <span>
                         <FormattedPrice price={calculatedTotal} />
                       </span>
