@@ -79,7 +79,7 @@ export default function AgeVerification() {
   }
 
   return (
-    <div className="sticky top-16 z-[1010] bg-slate-50 dark:bg-slate-800 flex flex-wrap gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
+    <div className="sticky top-16 z-[1010] bg-slate-50 dark:bg-slate-800 flex gap-5 items-center justify-center px-4 py-4 sm:px-6 lg:px-8">
       <div className="flex items-center text-pretty gap-3">
         <Image
           src="/swiyu-logo.png"
@@ -88,7 +88,7 @@ export default function AgeVerification() {
           height={32}
           className="rounded-md"
         />
-        <p className="text-slate-900 text-sm dark:text-white">
+        <p className="text-slate-900 text-xs sm:text-sm dark:text-white">
           <b>
             {formatMessage({
               id: 'age_verification_title',
