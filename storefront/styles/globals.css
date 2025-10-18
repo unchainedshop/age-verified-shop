@@ -66,10 +66,14 @@
 }
 
 .button--swiyu {
+  font-size: 0.75rem;
+  @media (width >= 640px) {
+    font-size: 0.875rem;
+  }
   background-image: linear-gradient(to right, #eb0273, #f0172f);
   color: white;
-  max-width: 220px;
-  max-height: 32px;
+  padding-inline: 1rem;
+  max-width: fit-content;
 }
 
 /* Scroll-driven animations */
