@@ -117,7 +117,7 @@ const Home = () => {
               <Loading />
             </div>
           ) : (
-            <div className="pb-4 grid grid-cols-1 gap-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="pb-4 grid grid-cols-1 gap-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
               {assortments.map((category) => (
                 <div key={category._id} className="scroll-scale-in">
                   <CategoryListItem category={category} />
