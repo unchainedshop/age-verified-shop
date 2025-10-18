@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
@@ -8,6 +8,7 @@ import useUser from '../../auth/hooks/useUser';
 import CartItem from './CartItem';
 import { useAppContext } from '../../common/components/AppContextWrapper';
 import FormattedPrice from '../../common/components/FormattedPrice';
+import groupCartItems from '../utils/groupCartItems';
 
 const SideCart = ({ isOpen }) => {
   const { user } = useUser();
@@ -15,6 +16,12 @@ const SideCart = ({ isOpen }) => {
   const { isCartOpen, toggleCart } = useAppContext();
   const [shouldRender, setShouldRender] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // Group cart items by product
+  const groupedItems = useMemo(
+    () => groupCartItems(user?.cart?.items || []),
+    [user?.cart?.items],
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -102,7 +109,7 @@ const SideCart = ({ isOpen }) => {
           <div
             className={`flex-1 overflow-y-auto p-6 transition-all duration-300 delay-200 ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
           >
-            {user?.cart?.items.length === 0 ? (
+            {groupedItems.length === 0 ? (
               <p className="text-center text-slate-600 dark:text-slate-300">
                 {intl.formatMessage({
                   id: 'no_product_in_cart',
@@ -122,9 +129,9 @@ const SideCart = ({ isOpen }) => {
               </p>
             ) : (
               <div className="space-y-3">
-                {(user?.cart?.items || []).map((item, index) => (
+                {groupedItems.map((item, index) => (
                   <div
-                    key={item._id}
+                    key={item.product._id}
                     className={`transition-all duration-300 ease-out ${
                       isOpen
                         ? 'translate-x-0 opacity-100'

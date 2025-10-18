@@ -16,18 +16,31 @@ import defaultNextImageLoader from '../../common/utils/defaultNextImageLoader';
 import FormattedPrice from '../../common/components/FormattedPrice';
 import getProductHref from '../../common/utils/getProductHref';
 
+interface CartItemProps {
+  _id: any;
+  quantity: any;
+  product: any;
+  unitPrice: any;
+  enableUpdate?: boolean;
+  itemIds?: string[]; // Optional: Array of all item IDs for grouped items
+}
+
 const CartItem = ({
   _id,
   quantity,
   product,
   unitPrice,
   enableUpdate = true,
-}) => {
+  itemIds, // Optional: Array of all item IDs for grouped items
+}: CartItemProps) => {
   const { updateCartItem } = useUpdateCartItemMutation();
   const { removeCartItem } = useRemoveCartItem();
   const [previousQuantity, setPreviousQuantity] = useState(quantity);
   const [currentQuantity, setCurrentQuantity] = useState(quantity);
   const { formatMessage } = useIntl();
+
+  // Use the array of item IDs if available (for grouped items), otherwise use single _id
+  const allItemIds = itemIds || [_id];
 
   const handleChange = (e) => {
     const amount = e.target.value;
@@ -37,7 +50,7 @@ const CartItem = ({
     setCurrentQuantity(quantity);
   }, [quantity]);
 
-  const handleBlur = (e) => {
+  const handleBlur = async (e) => {
     const amount = parseFloat(currentQuantity);
     let newValue = 0;
     if (Number.isNaN(amount) || amount < 0 || e.target.value === '0') {
@@ -53,10 +66,24 @@ const CartItem = ({
       }
     }
     if (previousQuantity !== newValue) {
-      updateCartItem({
-        itemId: _id,
-        quantity: newValue,
-      });
+      // For grouped items, update the first item and remove the rest
+      if (allItemIds.length > 1) {
+        // Update first item with new quantity
+        await updateCartItem({
+          itemId: allItemIds[0],
+          quantity: newValue,
+        });
+        // Remove other items
+        for (let i = 1; i < allItemIds.length; i++) {
+          await removeCartItem({ itemId: allItemIds[i] });
+        }
+      } else {
+        // Single item, just update it
+        await updateCartItem({
+          itemId: _id,
+          quantity: newValue,
+        });
+      }
 
       setPreviousQuantity(amount);
     }
@@ -103,7 +130,12 @@ const CartItem = ({
               <button
                 type="button"
                 className="-m-2.5 flex items-center justify-center p-2.5 text-slate-400 hover:text-red-500 transition-all duration-200 hover:scale-110 hover:bg-red-50 rounded-md dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/20"
-                onClick={() => removeCartItem({ itemId: _id })}
+                onClick={async () => {
+                  // Remove all items for this product (in case of grouped items)
+                  for (const itemId of allItemIds) {
+                    await removeCartItem({ itemId });
+                  }
+                }}
               >
                 <span className="sr-only">
                   {formatMessage({ id: 'remove', defaultMessage: 'Remove' })}
@@ -131,12 +163,24 @@ const CartItem = ({
                     className="rounded-md border border-slate-300 p-1 text-slate-700 shadow-sm transition-all duration-200 hover:scale-105 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 disabled:opacity-50 disabled:cursor-not-allowed dark:border-0 dark:text-slate-200"
                     aria-label="Decrease cart item"
                     disabled={currentQuantity === 1}
-                    onClick={() =>
-                      updateCartItem({
-                        itemId: _id,
-                        quantity: Math.max(quantity - 1, 1),
-                      })
-                    }
+                    onClick={async () => {
+                      const newQuantity = Math.max(quantity - 1, 1);
+                      // For grouped items, update the first item and remove the rest
+                      if (allItemIds.length > 1) {
+                        await updateCartItem({
+                          itemId: allItemIds[0],
+                          quantity: newQuantity,
+                        });
+                        for (let i = 1; i < allItemIds.length; i++) {
+                          await removeCartItem({ itemId: allItemIds[i] });
+                        }
+                      } else {
+                        await updateCartItem({
+                          itemId: _id,
+                          quantity: newQuantity,
+                        });
+                      }
+                    }}
                   >
                     <MinusIcon className="h-4 w-4" />
                   </button>
@@ -152,12 +196,24 @@ const CartItem = ({
                     className="rounded-md border border-slate-300 p-1 text-slate-700 shadow-sm transition-all duration-200 hover:scale-105 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 dark:border-0 dark:text-slate-200 dark:hover:bg-slate-600"
                     aria-label="Increase cart item"
                     type="button"
-                    onClick={() =>
-                      updateCartItem({
-                        itemId: _id,
-                        quantity: quantity + 1,
-                      })
-                    }
+                    onClick={async () => {
+                      const newQuantity = quantity + 1;
+                      // For grouped items, update the first item and remove the rest
+                      if (allItemIds.length > 1) {
+                        await updateCartItem({
+                          itemId: allItemIds[0],
+                          quantity: newQuantity,
+                        });
+                        for (let i = 1; i < allItemIds.length; i++) {
+                          await removeCartItem({ itemId: allItemIds[i] });
+                        }
+                      } else {
+                        await updateCartItem({
+                          itemId: _id,
+                          quantity: newQuantity,
+                        });
+                      }
+                    }}
                   >
                     <PlusIcon className="h-4 w-4" />
                   </button>

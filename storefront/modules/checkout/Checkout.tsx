@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
+import { useMemo } from 'react';
 import ErrorMessage from '../common/components/ErrorMessage';
 import CheckoutContact from './CheckoutContact';
 import CheckoutAddresses from './CheckoutAddresses';
@@ -7,6 +8,7 @@ import { useAppContext } from '../common/components/AppContextWrapper';
 import usePushNotification from '../context/push-notification/usePushNotification';
 import FormattedPrice from '../common/components/FormattedPrice';
 import { useIntl } from 'react-intl';
+import groupCartItems from '../cart/utils/groupCartItems';
 
 export const CART_CHECKOUT_QUERY = gql`
   query CartCheckout {
@@ -122,6 +124,12 @@ const Checkout = () => {
   });
   const { isSubscribed } = usePushNotification();
 
+  // Group cart items by product - must be before early returns
+  const groupedItems = useMemo(
+    () => groupCartItems(data?.me?.cart?.items || []),
+    [data?.me?.cart?.items],
+  );
+
   if (error) return <ErrorMessage message="Error loading cart" />;
   if (!data?.me?.cart) return <div>Loading</div>;
 
@@ -190,9 +198,9 @@ const Checkout = () => {
 
               {/* Cart Items */}
               <div className="space-y-4 mb-6">
-                {data.me.cart.items?.length > 0 ? (
-                  data.me.cart.items.map((item) => (
-                    <div key={item._id} className="flex gap-4">
+                {groupedItems.length > 0 ? (
+                  groupedItems.map((item) => (
+                    <div key={item.product._id} className="flex gap-4">
                       {/* Product Image */}
                       <div className="w-16 h-16 bg-slate-200 dark:bg-slate-700 rounded-md overflow-hidden flex-shrink-0">
                         {item.product.media?.[0]?.file?.url ? (
@@ -241,7 +249,7 @@ const Checkout = () => {
               </div>
 
               {/* Order Totals */}
-              {data.me.cart.items?.length > 0 && (
+              {groupedItems.length > 0 && (
                 <>
                   <div className="border-t border-slate-200 dark:border-0 pt-4 space-y-2">
                     <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300">
