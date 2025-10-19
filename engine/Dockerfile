@@ -20,8 +20,8 @@ RUN echo "${GIT_COMMIT}" > /webapp/version.txt && npm ci
 
 COPY . /webapp/
 
-HEALTHCHECK --start-period=10s --interval=20s --timeout=2s \
-  CMD wget --spider --header 'content-type: application/json' --post-data '{"operationName":null,"variables":{},"query":"{\n  shopInfo {\n    _id\n  }\n}\n"}' http://0.0.0.0:3000/graphql
+HEALTHCHECK --start-period=10s --interval=60s --timeout=2s \
+  CMD curl -f http://0.0.0.0:3000/graphql -H 'content-type: application/json' --data-binary '{"operationName":null,"variables":{},"query":"{\n  shopInfo {\n    _id\n  }\n}\n"}' || exit
 
 EXPOSE 3000
 
