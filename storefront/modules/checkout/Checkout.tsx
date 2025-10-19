@@ -133,26 +133,6 @@ const Checkout = () => {
   const itemsTotal = data.me.cart.itemsTotal;
   const taxesTotal = data.me.cart.taxesTotal;
   const deliveryTotal = data.me.cart.deliveryTotal;
-  const grandTotal = data.me.cart.grandTotal;
-
-  // Calculate correct total manually as a workaround for backend calculation issue
-  const calculateCheckoutTotal = () => {
-    const itemsAmount = itemsTotal?.amount || 0;
-    const taxAmount = taxesTotal?.amount || 0;
-    const deliveryAmount = deliveryTotal?.amount || 0;
-    const paymentAmount = data.me.cart.payment?.fee?.amount || 0;
-
-    const calculatedTotal =
-      itemsAmount + taxAmount + deliveryAmount + paymentAmount;
-
-    return {
-      amount: calculatedTotal,
-      currencyCode:
-        grandTotal?.currencyCode || itemsTotal?.currencyCode || 'CHF',
-    };
-  };
-
-  const calculatedTotal = calculateCheckoutTotal();
 
   return (
     <>
@@ -319,7 +299,7 @@ const Checkout = () => {
                         })}
                       </span>
                       <span>
-                        <FormattedPrice price={calculatedTotal} />
+                        <FormattedPrice price={data.me.cart.grandTotal} />
                       </span>
                     </div>
                   </div>
