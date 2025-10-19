@@ -1,43 +1,35 @@
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
-export default async function (job: { input: { name: string; company: string }; _id: string; }) {
-    const tempDir = await mkdtemp(tmpdir() + "/");
+const convertItemToColumn = ({ name, quantity, price }: { name: string; quantity: number; price: number; }) => {
+  const priceStr = Intl.NumberFormat("de-CH", { style: "currency", currency: "CHF" }).format(price);
+  return `[column: left ${quantity}x ${name}; right ${priceStr}; short ${name}]`
+}
 
-    const inputFilePath = `${tempDir}/${job._id}.stm`;
+export default async function (job: { input: { comment: string; total: number; orderNumber: string; orderDate: Date, items: Array<{ name: string; quantity: number; price: number; }> }; _id: string; }) {
+  const tempDir = await mkdtemp(tmpdir() + "/");
+  const inputFilePath = `${tempDir}/${job._id}.stm`;
+  const { orderNumber, orderDate, items, total, comment } = job?.input || {};
     
-    await writeFile(inputFilePath, `[bold: on]\
-[magnify: width 3; height 3]\
-Star Eats
+  await writeFile(inputFilePath, `[bold: on]\
+[magnify: width 2; height 2]\
+Abholschein
 [negative: on]\
-8A720\
-[space: count 1]\
-Micronics
+unchained.shop
 [plain]\
 [align: center]
 [magnify: width 1; height 1]
-Placed at March 24 2021 1:30PM
+${orderNumber} / ${new Date(orderDate).toLocaleDateString("de-CH")}
 [upperline: on]
-[space: count 48]
-[plain]\
-[bold: on]
-[magnify: width 2; height 2]\
-DELIVERY
-[plain]\
-[underline: on]
-[space: count 48]
+[space: count 32]
 [plain]
-[column: left 1XStar's lunch box A *; right $10.95; short lunch box A *]
-------------------------------------------------
-[column: left Subtotal; right $0.97]
-[column: left Ammount paid; right $11.92]
-[column: left item 1; right $10.00]
-------------------------------------------------
-[align: left]\
-*Use special source as you like!
+${items.map(convertItemToColumn).join("")}
+-------------------------------
+[column: left Total; right ${Intl.NumberFormat("de-CH", { style: "currency", currency: "CHF" }).format(total)}]\
+-------------------------------
+${comment}
 [cut: feed; partial]
 `)
 
-
-    return inputFilePath;
+  return inputFilePath;
 }

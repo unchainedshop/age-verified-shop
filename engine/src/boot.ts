@@ -14,6 +14,7 @@ import connectREST from './api/rest/index.ts';
 import connectCloudPRNT from './api/cloudprnt/index.ts';
 
 import './plugins/age-restriction.ts';
+import './plugins/pickup-startupnights.ts';
 import { FilterDirector } from "@unchainedshop/core";
 
 const fastify = Fastify({
