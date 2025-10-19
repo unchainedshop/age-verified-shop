@@ -72,7 +72,7 @@ const PickupStartupNights: IDeliveryAdapter = {
           items.push({
             name: productText.title,
             quantity: item.quantity || 1,
-            price: (productPricing.unitPrice({}).amount || 0) / 100,
+            price: (productPricing.total({}).amount || 0) / 100,
           });
         }
 

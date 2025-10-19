@@ -23,9 +23,10 @@ ${orderNumber} / ${new Date(orderDate).toLocaleDateString("de-CH")}
 [upperline: on]
 [space: count 32]
 [plain]
-${items.map(convertItemToColumn).join("")}
+${items.map(convertItemToColumn).join(`
+`)}
 -------------------------------
-[column: left Total; right ${Intl.NumberFormat("de-CH", { style: "currency", currency: "CHF" }).format(total)}]\
+[column: left Total; right ${Intl.NumberFormat("de-CH", { style: "currency", currency: "CHF" }).format(total)}]
 -------------------------------
 ${comment}
 [cut: feed; partial]
