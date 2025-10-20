@@ -2,11 +2,9 @@ FROM node:24 AS bundler
 
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 
-RUN wget https://cloudprnt.net/CloudPRNTSDK/cputil/cputil-linux-x64.tar.gz && \
-  tar -xf cputil-linux-x64.tar.gz && \
-  mkdir -p /opt/star && \
-  mv cputil-linux-x64/* /opt/star && \
-  ln -s /opt/star/cputil /usr/local/bin/cputil
+ADD ./cputil-linux-x64_v201.tar.gz /opt
+RUN chmod +x /opt/cputil-linux-x64_v201/cputil-linux-x64/cputil && \
+  ln -s /opt/cputil-linux-x64_v201/cputil-linux-x64/cputil /usr/local/bin/cputil
 
 # Install app dependencies
 RUN mkdir -p /webapp
