@@ -4,13 +4,11 @@ import useUser from '../../auth/hooks/useUser';
 
 export const ADD_CART_PRODUCT_MUTATION = gql`
   mutation AddCartProduct(
-    $orderId: ID
     $productId: ID!
     $quantity: Int
     $configuration: [ProductConfigurationParameterInput!]
   ) {
     addCartProduct(
-      orderId: $orderId
       productId: $productId
       quantity: $quantity
       configuration: $configuration
@@ -76,7 +74,6 @@ const useAddCartProduct = () => {
       configuration: Array<{ key: string; value: string }>;
       quantity: number;
       productId: string;
-      orderId?: string;
     },
     options,
   ) => {
@@ -88,12 +85,7 @@ const useAddCartProduct = () => {
         await client.resetStore();
       }
       await addCartProductMutation({
-        variables: {
-          ...variables,
-          orderId: variables?.orderId || user?.cart?._id,
-          quantity: variables?.quantity || 1,
-          configuration: variables?.configuration || undefined,
-        },
+        variables,
         ...options,
       });
     } catch (err: any) {
