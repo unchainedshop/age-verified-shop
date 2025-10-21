@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useIntl } from 'react-intl';
 import Button from '../../common/components/Button';
 import AgeVerificationModal from './AgeVerificationModal';
@@ -88,18 +89,43 @@ export default function AgeVerification() {
           height={32}
           className="rounded-md"
         />
-        <p className="text-slate-900 text-xs sm:text-sm dark:text-white">
-          <b>
+        <div className="text-slate-900 text-xs sm:text-sm dark:text-white">
+          <p>
+            <b>
+              {formatMessage({
+                id: 'age_verification_title',
+                defaultMessage: 'e-ID Age Verification:',
+              })}{' '}
+            </b>
             {formatMessage({
-              id: 'age_verification_title',
-              defaultMessage: 'e-ID Age Verification:',
+              id: 'age_verification_description',
+              defaultMessage: 'Confirm your age with Swiyu and see all products.',
+            })}
+          </p>
+          <p className="text-xs mt-1">
+            {formatMessage({
+              id: 'no_swiyu_app',
+              defaultMessage: 'Kein Swiyu?',
             })}{' '}
-          </b>
-          {formatMessage({
-            id: 'age_verification_description',
-            defaultMessage: 'Confirm your age with Swiyu and see all products.',
-          })}
-        </p>
+            <Link
+              href="https://apps.apple.com/ch/app/swiyu/id6737259614"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-slate-600 dark:hover:text-slate-300"
+            >
+              App Store
+            </Link>
+            {' | '}
+            <Link
+              href="https://play.google.com/store/apps/details?id=ch.admin.foitt.swiyu&pli=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-slate-600 dark:hover:text-slate-300"
+            >
+              Google Play
+            </Link>
+          </p>
+        </div>
       </div>
       <AgeVerificationButton
         verificationRequest={verificationRequest}
