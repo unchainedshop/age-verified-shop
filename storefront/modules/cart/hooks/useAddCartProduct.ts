@@ -27,6 +27,9 @@ export const ADD_CART_PRODUCT_MUTATION = gql`
             amount
             currencyCode
           }
+          product {
+            _id
+          }
         }
         itemsTotal: total(category: ITEMS) {
           amount
