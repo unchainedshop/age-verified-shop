@@ -11,7 +11,7 @@ export default async function checkAgeVerification(root: never, { requestId: for
   const requestId = (user?.meta?.ageVerification?.requestId) ? user.meta.ageVerification.requestId : forcedRequestId;
 
   const response = await fetch(
-      `${SWIYU_VERIFIER_ENDPOINT}/verifications/${requestId}`,
+      `${SWIYU_VERIFIER_ENDPOINT}/verifications/${encodeURIComponent(requestId)}`,
       {
         method: "GET",
         headers: {
