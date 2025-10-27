@@ -1,0 +1,151 @@
+services:
+  verifier_postgres:
+    image: postgres:15.8
+    hostname: verifier_postgres
+    environment:
+      POSTGRES_USER: "verifier_mgmt_user"
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_DB: "verifier_db"
+    networks:
+      - swiyu
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verifier_mgmt_user -d verifier_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  engine:
+    hostname: swiyu-engine
+    image: registry.ucc.dev/unchained/age-verified-shop/engine:stable
+    extra_hosts:
+      - swiyu.unchained.wtf:host-gateway
+    environment:
+      EMAIL_FROM: noreply@unchained.shop
+      EMAIL_WEBSITE_NAME: Swiyu Demo
+      EMAIL_WEBSITE_URL: https://swiyu.unchained.wtf
+      NODE_ENV: production
+      ROOT_URL: https://swiyu.unchained.wtf
+      UNCHAINED_ASSIGN_CART_FOR_USERS: "1"
+      UNCHAINED_COOKIE_DOMAIN: swiyu.unchained.wtf
+      UNCHAINED_COOKIE_PATH: /
+      TZ: "Europe/Paris"
+      LANG: de_CH.UTF-8
+      PORT: 3000
+      MONGO_URL:
+      MONGO_URL_FILE: /run/secrets/mongo_url
+      UNCHAINED_SECRET:
+      UNCHAINED_SECRET_FILE: /run/secrets/unchained_secret
+      UNCHAINED_GRIDFS_PUT_UPLOAD_SECRET:
+      UNCHAINED_GRIDFS_PUT_UPLOAD_SECRET_FILE: /run/secrets/unchained_secret
+      UNCHAINED_TOKEN_SECRET:
+      UNCHAINED_TOKEN_SECRET_FILE: /run/secrets/unchained_secret
+      SWIYU_WEBHOOK_API_KEY: $WEBHOOK_API_KEY_VALUE
+      SWIYU_VERIFIER_ENDPOINT: http://verifier:8080/management/api
+    secrets:
+      - mongo_url
+      - unchained_secret
+    networks:
+      - db
+      - traefik
+      - swiyu
+    logging:
+      driver: json-file
+      options:
+        max-file: "5"
+        max-size: 10m
+    deploy:
+      replicas: 1
+      update_config:
+        delay: 0s
+        order: start-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.swiyu-engine.rule=Host(`swiyu.unchained.wtf`) && PathPrefix(`/graphql`,`/cdn`,`/gridfs`,`/bulk-import`,`/rest`,`/payment`,`/pricing`)"
+        - "traefik.http.routers.swiyu-admin.rule=Host(`admin.swiyu.unchained.wtf`)"
+        - "traefik.http.services.swiyu-engine.loadbalancer.server.port=3000"
+
+  storefront:
+    image: registry.ucc.dev/unchained/age-verified-shop/storefront:stable
+    hostname: swiyu-storefront
+    environment:
+      NEXT_PUBLIC_GRAPHQL_ENDPOINT: https://swiyu.unchained.wtf/graphql
+      UNCHAINED_ENDPOINT: http://swiyu-engine:3000/graphql
+      NODE_ENV: production
+      TZ: "Europe/Paris"
+      LANG: de_CH.UTF-8
+    networks:
+      - traefik
+      - swiyu
+    logging:
+      driver: json-file
+      options:
+        max-file: "5"
+        max-size: 10m
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.swiyu-storefront.rule=Host(`swiyu.unchained.wtf`)"
+        - "traefik.http.services.swiyu-storefront.loadbalancer.server.port=3000"
+      update_config:
+        delay: 10s
+        order: start-first
+
+  verifier:
+    image: ghcr.io/swiyu-admin-ch/swiyu-verifier:2.0.1
+    configs:
+      - source: verifier_metadata
+        target: /verifier_metadata.json
+    environment:
+      VERIFIER_DID: "did:tdw:QmUHPe91p2Vmamjmb696UAo6ZZQogyyEFB4DVic2uzGBqo:identifier-reg.trust-infra.swiyu-int.admin.ch:api:v1:did:e3277fbe-0bec-4c64-aaf9-77c95745523b"
+      DID_VERIFICATION_METHOD: "did:tdw:QmUHPe91p2Vmamjmb696UAo6ZZQogyyEFB4DVic2uzGBqo:identifier-reg.trust-infra.swiyu-int.admin.ch:api:v1:did:e3277fbe-0bec-4c64-aaf9-77c95745523b#auth-key-01"
+      VERIFIER_NAME: "Demo Shop"
+      EXTERNAL_URL: "https://swiyu.unchained.wtf"
+      OPENID_CLIENT_METADATA_FILE: "file:/verifier_metadata.json"
+      SIGNING_KEY: $SIGNING_KEY
+      POSTGRES_USER: "verifier_mgmt_user"
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_DB: "verifier_db"
+      POSTGRES_JDBC: "jdbc:postgresql://verifier_postgres:5432/verifier_db"
+      WEBHOOK_CALLBACK_URI: http://swiyu-engine:3000/rest/swiyu-callback
+      WEBHOOK_API_KEY_HEADER: X-API-Key
+      WEBHOOK_API_KEY_VALUE: $WEBHOOK_API_KEY_VALUE
+      WEBHOOK_INTERVAL: 100
+    networks:
+      - swiyu
+      - traefik
+    logging:
+      driver: json-file
+      options:
+        max-file: "5"
+        max-size: 10m
+    deploy:
+      replicas: 1
+      update_config:
+        delay: 0s
+        order: start-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.swiyu-verifier.rule=Host(`swiyu.unchained.wtf`) && PathPrefix(`/api`,`/management`, `/oid4vp`, `/actuator`)"
+        - "traefik.http.services.swiyu-verifier.loadbalancer.server.port=8080"
+
+configs:
+  verifier_metadata:
+    file: ./metadata.json
+    name: verifier_metadata-2025-08-28-3
+
+secrets:
+  mongo_url:
+    name: swiyu_mongo_url-2025-09-01
+    external: true
+  unchained_secret:
+    name: swiyu_unchained_secret-2025-09-01
+    external: true
+
+networks:
+  swiyu:
+  db:
+    external: true
+  traefik:
+    name: traefik
+    external: true
