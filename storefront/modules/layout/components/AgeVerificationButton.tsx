@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { useIntl } from 'react-intl';
 import Button from '../../common/components/Button';
 import { useEffect, useState } from 'react';
+import useCheckAgeVerification from '../../auth/hooks/useCheckAgeVerification';
+
+let lastCheck = new Date().getTime();
 
 export default function AgeVerificationButton({
   verificationRequest,
@@ -10,6 +13,7 @@ export default function AgeVerificationButton({
 }) {
   const { formatMessage } = useIntl();
   const [isMobile, setMobile] = useState(undefined);
+  const { checkAgeVerification } = useCheckAgeVerification();
 
   useEffect(() => {
     if (
@@ -20,6 +24,16 @@ export default function AgeVerificationButton({
       setMobile(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (new Date().getTime() - lastCheck > 500 && verificationRequest?._id) {
+      // After 500ms, re-check verification status manually
+      // This is an idea to workaround potential delays in SSE updates
+      checkAgeVerification(verificationRequest?._id);
+      lastCheck = new Date().getTime();
+    }
+    return;
+  });
 
   if (!verificationRequest)
     return (
