@@ -3,12 +3,26 @@ import type { Context } from "@unchainedshop/api";
 import child_process from "node:child_process";
 import util from "node:util";
 import { createLogger } from "@unchainedshop/logger";
+import { WorkerDirector, WorkerAdapter } from "@unchainedshop/core";
+import type { IWorkerAdapter } from "@unchainedshop/core";
 
 const logger = createLogger("gastro:print");
 
 const execFile = util.promisify(child_process.execFile);
 
-export const allocateJob = (externalJobType) => async function (request: FastifyRequest<{
+
+export const PrintLabel: IWorkerAdapter<{ name: string; company: string }, void> = {
+  ...WorkerAdapter,
+  key: "shop.unchained.cloudprnt",
+  label: "Star Micronics CloudPRNT",
+  version: "1.0",
+  type: "CLOUDPRNT",
+  external: true,
+};
+
+WorkerDirector.registerAdapter(PrintLabel);
+
+export const allocateJob = async function (request: FastifyRequest<{
     Body: {
       printerMAC: string;
     };
@@ -23,7 +37,7 @@ export const allocateJob = (externalJobType) => async function (request: Fastify
       const mac = request.body.printerMAC.toUpperCase().trim();
 
       const newPrintJob = await request.unchainedContext.modules.worker.allocateWork({
-        types: [externalJobType],
+        types: [PrintLabel.type],
         worker: mac,
       });
 

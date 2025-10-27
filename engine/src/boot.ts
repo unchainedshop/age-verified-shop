@@ -11,7 +11,6 @@ import typeDefs from "./api/schema.ts";
 import resolvers from "./api/resolvers/index.ts";
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';
 import connectREST from './api/rest/index.ts';
-import connectCloudPRNT from './api/cloudprnt/index.ts';
 
 import './plugins/age-restriction.ts';
 import './plugins/pickup-startupnights.ts';
@@ -42,7 +41,6 @@ try {
   });
   connectDefaultPluginsToFastify(fastify, platform);
   connectREST(fastify);
-  connectCloudPRNT(fastify);
 
   fastify.register(fastifyRouter, {
     prefix: "/",
