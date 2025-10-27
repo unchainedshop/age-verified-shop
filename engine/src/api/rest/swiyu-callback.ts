@@ -21,8 +21,11 @@ export default async function swiyuCallbackHandler(
       throw new Error("Invalid Webhook API Key");
     }
 
+    // Validate and construct URL safely to prevent SSRF
+    const verificationUrl = new URL(`${SWIYU_VERIFIER_ENDPOINT}/verifications/${encodeURIComponent(request.body.verification_id)}`);
+
     const response = await fetch(
-      `${SWIYU_VERIFIER_ENDPOINT}/verifications/${request.body.verification_id}`,
+      verificationUrl.toString(),
       {
         method: "GET",
         headers: {
