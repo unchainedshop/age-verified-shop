@@ -92,7 +92,7 @@ services:
         order: start-first
 
   verifier:
-    image: ghcr.io/swiyu-admin-ch/swiyu-verifier:2.0.1
+    image: ghcr.io/swiyu-admin-ch/swiyu-verifier:2.0.2
     configs:
       - source: verifier_metadata
         target: /verifier_metadata.json
@@ -126,7 +126,7 @@ services:
         order: start-first
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.swiyu-verifier.rule=Host(`swiyu.unchained.wtf`) && PathPrefix(`/api`,`/management`, `/oid4vp`, `/actuator`)"
+        - "traefik.http.routers.swiyu-verifier.rule=Host(`swiyu.unchained.wtf`) && PathPrefix(`/oid4vp`)"
         - "traefik.http.services.swiyu-verifier.loadbalancer.server.port=8080"
 
 configs:
