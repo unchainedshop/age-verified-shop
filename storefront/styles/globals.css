@@ -73,6 +73,7 @@
   background-image: linear-gradient(to right, #eb0273, #f0172f);
   color: white;
   padding-inline: 1rem;
+  min-width: 150px;
   max-width: fit-content;
 }
 

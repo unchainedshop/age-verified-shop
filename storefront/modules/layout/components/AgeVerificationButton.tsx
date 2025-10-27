@@ -37,7 +37,7 @@ export default function AgeVerificationButton({
 
   if (!verificationRequest)
     return (
-      <Button disabled>
+      <Button className="button--swiyu" disabled>
         {formatMessage({ id: 'loading', defaultMessage: 'Loading...' })}
       </Button>
     );
@@ -45,7 +45,7 @@ export default function AgeVerificationButton({
   // Show loading state while checking mobile
   if (isMobile === undefined)
     return (
-      <Button disabled>
+      <Button className="button--swiyu" disabled>
         {formatMessage({ id: 'loading', defaultMessage: 'Loading...' })}
       </Button>
     );
