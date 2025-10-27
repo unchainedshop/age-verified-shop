@@ -17,7 +17,8 @@ export default async function swiyuCallbackHandler(
       `Received Swiyu callback for: ${request.body.verification_id}`
     );
 
-    if (process.env.SWIYU_WEBHOOK_API_KEY && request.headers["X-API-Key"] !== process.env.SWIYU_WEBHOOK_API_KEY) {
+    if (process.env.SWIYU_WEBHOOK_API_KEY && request.headers["x-api-key"] !== process.env.SWIYU_WEBHOOK_API_KEY) {
+      console.error(request.headers);
       throw new Error("Invalid Webhook API Key");
     }
 
