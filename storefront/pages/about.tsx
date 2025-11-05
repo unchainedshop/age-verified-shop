@@ -19,7 +19,8 @@ const AboutPage = () => {
                 Über uns
               </h1>
               <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl">
-                Unchained Commerce – Headless E-Commerce Plattform für moderne Online-Shops
+                Unchained Commerce – Headless E-Commerce Plattform für moderne
+                Online-Shops
               </p>
             </div>
 
@@ -30,13 +31,17 @@ const AboutPage = () => {
                 </h2>
                 <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
                   <p>
-                    Unchained Commerce GmbH ist ein Schweizer Software-Unternehmen mit Sitz in Zürich.
-                    Wir entwickeln moderne E-Commerce-Lösungen auf Basis unserer Open-Source Headless Commerce Plattform.
+                    Unchained Commerce GmbH ist ein Schweizer
+                    Software-Unternehmen mit Sitz in Zürich. Wir entwickeln
+                    moderne E-Commerce-Lösungen auf Basis unserer Open-Source
+                    Headless Commerce Plattform.
                   </p>
                   <p>
-                    Unsere Mission ist es, Online-Händlern maximale Flexibilität und Unabhängigkeit zu bieten.
-                    Mit unserem API-first Ansatz ermöglichen wir es Unternehmen, individuelle Shopping-Erlebnisse
-                    zu schaffen – ohne an proprietäre Systeme gebunden zu sein.
+                    Unsere Mission ist es, Online-Händlern maximale Flexibilität
+                    und Unabhängigkeit zu bieten. Mit unserem API-first Ansatz
+                    ermöglichen wir es Unternehmen, individuelle
+                    Shopping-Erlebnisse zu schaffen – ohne an proprietäre
+                    Systeme gebunden zu sein.
                   </p>
                 </div>
               </div>
@@ -47,9 +52,10 @@ const AboutPage = () => {
                     Unsere Technologie
                   </h2>
                   <p className="text-lg text-gray-700 dark:text-gray-300">
-                    Die Unchained Engine ist eine flexible, modulare E-Commerce-Plattform,
-                    die auf modernen Web-Technologien basiert. GraphQL API, Microservices-Architektur
-                    und vollständige Anpassbarkeit stehen im Zentrum unserer Lösung.
+                    Die Unchained Engine ist eine flexible, modulare
+                    E-Commerce-Plattform, die auf modernen Web-Technologien
+                    basiert. GraphQL API, Microservices-Architektur und
+                    vollständige Anpassbarkeit stehen im Zentrum unserer Lösung.
                   </p>
                 </div>
 
@@ -58,9 +64,10 @@ const AboutPage = () => {
                     Open Source
                   </h2>
                   <p className="text-lg text-gray-700 dark:text-gray-300">
-                    Wir glauben an offene Technologie. Unsere Plattform ist Open Source und wird
-                    aktiv von einer wachsenden Community weiterentwickelt. Transparenz und
-                    Zusammenarbeit sind Teil unserer DNA.
+                    Wir glauben an offene Technologie. Unsere Plattform ist Open
+                    Source und wird aktiv von einer wachsenden Community
+                    weiterentwickelt. Transparenz und Zusammenarbeit sind Teil
+                    unserer DNA.
                   </p>
                 </div>
               </div>
@@ -71,14 +78,15 @@ const AboutPage = () => {
                 </h2>
                 <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
                   <p>
-                    Wir verstehen, dass jedes E-Commerce-Projekt einzigartig ist. Deshalb bieten wir
-                    keine One-Size-Fits-All-Lösung, sondern eine flexible Plattform, die sich an
-                    Ihre spezifischen Anforderungen anpasst.
+                    Wir verstehen, dass jedes E-Commerce-Projekt einzigartig
+                    ist. Deshalb bieten wir keine One-Size-Fits-All-Lösung,
+                    sondern eine flexible Plattform, die sich an Ihre
+                    spezifischen Anforderungen anpasst.
                   </p>
                   <p>
-                    Von der ersten Beratung bis zur erfolgreichen Umsetzung begleiten wir unsere
-                    Kunden mit Expertise und Engagement. Dabei setzen wir auf agile Methoden und
-                    enge Zusammenarbeit.
+                    Von der ersten Beratung bis zur erfolgreichen Umsetzung
+                    begleiten wir unsere Kunden mit Expertise und Engagement.
+                    Dabei setzen wir auf agile Methoden und enge Zusammenarbeit.
                   </p>
                 </div>
               </div>

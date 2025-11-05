@@ -29,8 +29,18 @@ const Privacy = () => {
             <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-400 dark:border-blue-600 rounded-2xl p-8 mb-12">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <svg className="w-8 h-8 text-blue-600 dark:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-8 h-8 text-blue-600 dark:text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <div>
@@ -38,8 +48,9 @@ const Privacy = () => {
                     Information: Demo-Shop ohne Datenerhebung
                   </h2>
                   <p className="text-lg text-blue-900 dark:text-blue-100 font-semibold">
-                    Dieser Shop ist eine reine Demonstration. Es werden keine personenbezogenen Daten erhoben,
-                    gespeichert oder verarbeitet. Es werden auch keine Cookies verwendet.
+                    Dieser Shop ist eine reine Demonstration. Es werden keine
+                    personenbezogenen Daten erhoben, gespeichert oder
+                    verarbeitet. Es werden auch keine Cookies verwendet.
                   </p>
                 </div>
               </div>
@@ -56,7 +67,10 @@ const Privacy = () => {
                   <p>CH-8005 Zürich</p>
                   <p className="pt-2">
                     E-Mail:{' '}
-                    <a href="mailto:hello@unchained.shop" className="text-blue-600 dark:text-blue-400 hover:underline">
+                    <a
+                      href="mailto:hello@unchained.shop"
+                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
                       hello@unchained.shop
                     </a>
                   </p>
@@ -70,19 +84,25 @@ const Privacy = () => {
                 </h2>
                 <div className="space-y-3 text-lg text-gray-700 dark:text-gray-300">
                   <p>
-                    Da es sich um einen reinen Demo-Shop handelt, werden <strong>keine personenbezogenen Daten</strong> erhoben,
+                    Da es sich um einen reinen Demo-Shop handelt, werden{' '}
+                    <strong>keine personenbezogenen Daten</strong> erhoben,
                     gespeichert oder verarbeitet. Dies umfasst:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>Keine Speicherung von IP-Adressen</li>
                     <li>Keine Erfassung von Zugriffsdaten oder Logs</li>
-                    <li>Keine Erhebung von Namen, Adressen oder Kontaktdaten</li>
+                    <li>
+                      Keine Erhebung von Namen, Adressen oder Kontaktdaten
+                    </li>
                     <li>Keine Verarbeitung von Zahlungsinformationen</li>
-                    <li>Keine Verwendung von Tracking-Tools oder Analysediensten</li>
+                    <li>
+                      Keine Verwendung von Tracking-Tools oder Analysediensten
+                    </li>
                   </ul>
                   <p className="mt-4">
-                    Alle im Demo-Bestellprozess eingegebenen Daten dienen ausschliesslich der Demonstration
-                    und werden nicht dauerhaft gespeichert.
+                    Alle im Demo-Bestellprozess eingegebenen Daten dienen
+                    ausschliesslich der Demonstration und werden nicht dauerhaft
+                    gespeichert.
                   </p>
                 </div>
               </div>
@@ -92,8 +112,9 @@ const Privacy = () => {
                   Keine Cookies
                 </h2>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Diese Website verwendet <strong>keine Cookies</strong> zur Speicherung von Informationen
-                  auf Ihrem Gerät. Es werden keine Marketing-Cookies, Analyse-Cookies oder sonstige
+                  Diese Website verwendet <strong>keine Cookies</strong> zur
+                  Speicherung von Informationen auf Ihrem Gerät. Es werden keine
+                  Marketing-Cookies, Analyse-Cookies oder sonstige
                   Tracking-Mechanismen eingesetzt.
                 </p>
               </div>
@@ -103,7 +124,8 @@ const Privacy = () => {
                   Keine Weitergabe an Dritte
                 </h2>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Da keine Daten erhoben werden, erfolgt auch keine Weitergabe von Daten an Dritte.
+                  Da keine Daten erhoben werden, erfolgt auch keine Weitergabe
+                  von Daten an Dritte.
                 </p>
               </div>
 
@@ -112,9 +134,11 @@ const Privacy = () => {
                   Zweck des Demo-Shops
                 </h2>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Dieser Shop dient ausschliesslich der Demonstration der technischen Möglichkeiten
-                  der Unchained Commerce Plattform. Er zeigt, wie ein moderner E-Commerce-Shop auf Basis
-                  unserer Headless Commerce Lösung funktioniert – ohne dabei echte Daten zu erheben oder zu speichern.
+                  Dieser Shop dient ausschliesslich der Demonstration der
+                  technischen Möglichkeiten der Unchained Commerce Plattform. Er
+                  zeigt, wie ein moderner E-Commerce-Shop auf Basis unserer
+                  Headless Commerce Lösung funktioniert – ohne dabei echte Daten
+                  zu erheben oder zu speichern.
                 </p>
               </div>
 
@@ -131,7 +155,10 @@ const Privacy = () => {
                   <p>CH-8005 Zürich</p>
                   <p className="pt-2">
                     E-Mail:{' '}
-                    <a href="mailto:hello@unchained.shop" className="text-blue-600 dark:text-blue-400 hover:underline">
+                    <a
+                      href="mailto:hello@unchained.shop"
+                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
                       hello@unchained.shop
                     </a>
                   </p>

@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import ForgotPasswordForm from '../modules/auth/components/ForgotPasswordForm';
+import ForgotPasswordForm from '../modules/auth/components/ForgotPasswordForm.jsx';
 
 const ForgotPassword = () => {
   const { formatMessage } = useIntl();

@@ -66,9 +66,7 @@ const StripeCheckoutButton = ({ order }) => {
     );
   }
   return (
-    <div>
-      {formatMessage({ id: 'loading', defaultMessage: 'Loading...' })}
-    </div>
+    <div>{formatMessage({ id: 'loading', defaultMessage: 'Loading...' })}</div>
   );
 };
 

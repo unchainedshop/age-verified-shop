@@ -68,7 +68,7 @@ import AddToCartButton from '../modules/cart/components/AddToCartButton';
 import SideCart from '../modules/cart/components/SideCart';
 import NoData from '../modules/common/components/NoData';
 import AgeVerificationButton from '../modules/layout/components/AgeVerificationButton';
-import LanguageSwitch from '../modules/layout/components/LanguageSwitch';
+import LanguageSwitch from '../modules/common/components/LanguageSwitch';
 import ErrorMessage from '../modules/common/components/ErrorMessage';
 import StatusInformation from '../modules/common/components/StatusInformation';
 import CategoryListItem from '../modules/assortment/components/CategoryListItem';
@@ -720,10 +720,7 @@ const StyleguidePage = () => {
           name: 'Product Price',
           description: 'Product price with styling',
           examples: [
-            <ProductPrice
-              key="product-price-1"
-              price={sampleProduct.simulatedPrice}
-            />,
+            <ProductPrice key="product-price-1" product={sampleProduct} />,
           ],
         },
         {
@@ -731,12 +728,7 @@ const StyleguidePage = () => {
           description: 'Image component with fallback icon',
           examples: [
             <div key="image-1" className="w-32 h-32">
-              <ImageWithFallback
-                src=""
-                alt="Sample"
-                width={128}
-                height={128}
-              />
+              <ImageWithFallback src="" alt="Sample" width={128} height={128} />
             </div>,
           ],
         },
@@ -905,7 +897,11 @@ const StyleguidePage = () => {
           description: 'Product grid/list container',
           examples: [
             <div key="product-list-1" className="w-full">
-              <ProductList products={[sampleProduct]} />
+              <ProductList
+                products={[sampleProduct]}
+                totalProducts={1}
+                onLoadMore={() => {}}
+              />
             </div>,
           ],
         },
@@ -934,7 +930,10 @@ const StyleguidePage = () => {
           name: 'SideCart',
           description: 'Shopping cart sidebar/drawer',
           examples: [
-            <div key="side-cart-1" className="text-sm text-slate-600 dark:text-slate-400">
+            <div
+              key="side-cart-1"
+              className="text-sm text-slate-600 dark:text-slate-400"
+            >
               Cart drawer (opens on cart icon click)
             </div>,
           ],
@@ -966,15 +965,20 @@ const StyleguidePage = () => {
         {
           name: 'LanguageSwitch',
           description: 'Language switcher component',
-          examples: [
-            <LanguageSwitch key="lang-1" />,
-          ],
+          examples: [<LanguageSwitch key="lang-1" />],
         },
         {
           name: 'AgeVerificationButton',
           description: 'Swiss e-ID age verification button (swiyu)',
           examples: [
-            <AgeVerificationButton key="age-verify-1" />,
+            <AgeVerificationButton
+              key="age-verify-1"
+              verificationRequest={{
+                _id: 'demo-verification-id',
+                verificationDeepLink: 'swiyu://verify/demo',
+              }}
+              onOpenModal={() => {}}
+            />,
           ],
         },
       ],
@@ -2075,8 +2079,8 @@ const StyleguidePage = () => {
                 Design System Styleguide
               </h2>
               <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
-                Complete design system documentation for the Unchained Commerce Demo Shop.
-                Built with Tailwind CSS and modern React components.
+                Complete design system documentation for the Unchained Commerce
+                Demo Shop. Built with Tailwind CSS and modern React components.
               </p>
             </div>
             <div className="flex items-center space-x-4">
@@ -2108,7 +2112,8 @@ const StyleguidePage = () => {
                 </h3>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Reusable UI components with comprehensive examples and documentation
+                Reusable UI components with comprehensive examples and
+                documentation
               </p>
             </div>
 
