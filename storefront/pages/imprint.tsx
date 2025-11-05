@@ -56,7 +56,7 @@ const Imprint = () => {
                       href="mailto:hello@unchained.shop"
                       className="block hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                     >
-                      info@unchained.shop
+                      hello@unchained.shop
                     </a>
                   </div>
                 </div>
