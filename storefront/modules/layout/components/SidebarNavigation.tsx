@@ -378,7 +378,8 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
             {/* Copyright */}
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              © {new Date().getFullYear()} Store. All rights reserved.
+              © {new Date().getFullYear()} Unchained Commerce. All rights
+              reserved.
             </p>
           </div>
         </div>
