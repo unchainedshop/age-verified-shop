@@ -33,7 +33,7 @@ const Bookmarks = () => {
                 <Loading />
               ) : (
                 <ProductList
-                  onLoadMore={undefined}
+                  onLoadMore={() => {}}
                   totalProducts={bookmarkedProducts?.length || 0}
                   products={bookmarkedProducts || []}
                   viewMode={viewMode}

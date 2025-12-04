@@ -188,7 +188,7 @@ const Footer = () => {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-50">
-                Unchained
+                Unchained Commerce GmbH
               </h3>
               <ul className="mt-3 space-y-3">
                 {footerNavigation.unchained.map((item) => (

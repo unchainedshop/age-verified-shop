@@ -99,7 +99,8 @@ export default function AgeVerification() {
             </b>
             {formatMessage({
               id: 'age_verification_description',
-              defaultMessage: 'Confirm your age with Swiyu and see all products.',
+              defaultMessage:
+                'Confirm your age with Swiyu and see all products.',
             })}
           </p>
           <p className="text-xs mt-1">

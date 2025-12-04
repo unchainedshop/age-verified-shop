@@ -49,18 +49,26 @@ import AnimatedCheckmark from '../modules/common/components/AnimatedCheckmark';
 import CountUpAnimation from '../modules/common/components/CountUpAnimation';
 import FadeInSection from '../modules/common/components/FadeInSection';
 import Toggle from '../modules/common/components/Toggle';
-import ThemeToggle from '../modules/common/components/ThemeToggle';
 import SearchField from '../modules/common/components/SearchField';
-import Accordion from '../modules/common/components/Accordion';
 import TextField from '../modules/forms/components/TextField';
 import EmailField from '../modules/forms/components/EmailField';
 import PasswordField from '../modules/forms/components/PasswordField';
 import SelectField from '../modules/forms/components/SelectField';
+import SubmitButton from '../modules/forms/components/SubmitButton';
+import FormErrors from '../modules/forms/components/FormErrors';
 import FormattedPrice from '../modules/common/components/FormattedPrice';
+import ProductPrice from '../modules/common/components/ProductPrice';
+import ImageWithFallback from '../modules/common/components/ImageWithFallback';
+import ConfettiCelebration from '../modules/common/components/ConfettiCelebration';
 import ProductListItem from '../modules/products/components/ProductListItemCard';
+import ProductListItemRow from '../modules/products/components/ProductListItemRow';
+import ProductList from '../modules/products/components/ProductList';
 import CartItem from '../modules/cart/components/CartItem';
 import AddToCartButton from '../modules/cart/components/AddToCartButton';
+import SideCart from '../modules/cart/components/SideCart';
 import NoData from '../modules/common/components/NoData';
+import AgeVerificationButton from '../modules/layout/components/AgeVerificationButton';
+import LanguageSwitch from '../modules/common/components/LanguageSwitch';
 import ErrorMessage from '../modules/common/components/ErrorMessage';
 import StatusInformation from '../modules/common/components/StatusInformation';
 import CategoryListItem from '../modules/assortment/components/CategoryListItem';
@@ -652,7 +660,6 @@ const StyleguidePage = () => {
               onToggle={handleThemeToggle}
               active={toggleState}
             />,
-            <ThemeToggle key="theme-toggle" />,
           ],
         },
       ],
@@ -709,6 +716,22 @@ const StyleguidePage = () => {
             />,
           ],
         },
+        {
+          name: 'Product Price',
+          description: 'Product price with styling',
+          examples: [
+            <ProductPrice key="product-price-1" product={sampleProduct} />,
+          ],
+        },
+        {
+          name: 'Image With Fallback',
+          description: 'Image component with fallback icon',
+          examples: [
+            <div key="image-1" className="w-32 h-32">
+              <ImageWithFallback src="" alt="Sample" width={128} height={128} />
+            </div>,
+          ],
+        },
       ],
     },
     {
@@ -754,6 +777,23 @@ const StyleguidePage = () => {
           ],
         },
         {
+          name: 'SelectField',
+          description: 'Dropdown select input',
+          examples: [
+            <FormProvider key="form-select" {...formMethods}>
+              <SelectField
+                name="country"
+                label="Country"
+                options={[
+                  { value: 'ch', label: 'Switzerland' },
+                  { value: 'de', label: 'Germany' },
+                  { value: 'at', label: 'Austria' },
+                ]}
+              />
+            </FormProvider>,
+          ],
+        },
+        {
           name: 'SearchField',
           description: 'Search input with icon',
           examples: [
@@ -763,6 +803,24 @@ const StyleguidePage = () => {
               onInputChange={(e) => setSearchValue(e.target.value)}
               inputText="Search..."
             />,
+          ],
+        },
+        {
+          name: 'SubmitButton',
+          description: 'Form submit button with loading state',
+          examples: [
+            <FormProvider key="form-submit" {...formMethods}>
+              <SubmitButton>Submit Form</SubmitButton>
+            </FormProvider>,
+          ],
+        },
+        {
+          name: 'FormErrors',
+          description: 'Form-level error display',
+          examples: [
+            <FormProvider key="form-errors" {...formMethods}>
+              <FormErrors />
+            </FormProvider>,
           ],
         },
       ],
@@ -802,28 +860,13 @@ const StyleguidePage = () => {
             </FadeInSection>,
           ],
         },
-      ],
-    },
-    {
-      title: 'Interactive Elements',
-      components: [
         {
-          name: 'Accordion',
-          description: 'Collapsible content sections',
+          name: 'Confetti Celebration',
+          description: 'Success celebration with confetti',
           examples: [
-            <Accordion
-              key="accordion-1"
-              data={[
-                {
-                  header: 'Click to expand',
-                  body: (
-                    <p>
-                      This is the accordion content that can be shown or hidden.
-                    </p>
-                  ),
-                },
-              ]}
-            />,
+            <div key="confetti-1" className="relative h-32">
+              <ConfettiCelebration />
+            </div>,
           ],
         },
       ],
@@ -837,6 +880,28 @@ const StyleguidePage = () => {
           examples: [
             <div key="product-1" className="w-64">
               <ProductListItem product={sampleProduct} />
+            </div>,
+          ],
+        },
+        {
+          name: 'ProductListItemRow',
+          description: 'Product row layout for list view',
+          examples: [
+            <div key="product-row-1" className="w-full">
+              <ProductListItemRow product={sampleProduct} />
+            </div>,
+          ],
+        },
+        {
+          name: 'ProductList',
+          description: 'Product grid/list container',
+          examples: [
+            <div key="product-list-1" className="w-full">
+              <ProductList
+                products={[sampleProduct]}
+                totalProducts={1}
+                onLoadMore={() => {}}
+              />
             </div>,
           ],
         },
@@ -861,6 +926,18 @@ const StyleguidePage = () => {
             <AddToCartButton key="add-cart-1" productId={sampleProduct._id} />,
           ],
         },
+        {
+          name: 'SideCart',
+          description: 'Shopping cart sidebar/drawer',
+          examples: [
+            <div
+              key="side-cart-1"
+              className="text-sm text-slate-600 dark:text-slate-400"
+            >
+              Cart drawer (opens on cart icon click)
+            </div>,
+          ],
+        },
       ],
     },
     {
@@ -882,6 +959,25 @@ const StyleguidePage = () => {
             <AssortmentBreadcrumbs
               key="breadcrumb-1"
               currentAssortment={sampleCategory}
+            />,
+          ],
+        },
+        {
+          name: 'LanguageSwitch',
+          description: 'Language switcher component',
+          examples: [<LanguageSwitch key="lang-1" />],
+        },
+        {
+          name: 'AgeVerificationButton',
+          description: 'Swiss e-ID age verification button (swiyu)',
+          examples: [
+            <AgeVerificationButton
+              key="age-verify-1"
+              verificationRequest={{
+                _id: 'demo-verification-id',
+                verificationDeepLink: 'swiyu://verify/demo',
+              }}
+              onOpenModal={() => {}}
             />,
           ],
         },
@@ -1742,12 +1838,14 @@ const StyleguidePage = () => {
         // Hero (3x2) - Most important/complex components
         ProductListItem: 'hero',
         CartItem: 'hero',
+        ProductList: 'hero',
 
         // Large (2x2) - Complex components that need space
-        Accordion: 'large',
         FadeInSection: 'large',
         CategoryListItem: 'large',
         Button: 'large',
+        ProductListItemRow: 'large',
+        AgeVerificationButton: 'large',
 
         // Wide (2x1) - Horizontally oriented components
         Badge: 'wide',
@@ -1757,15 +1855,21 @@ const StyleguidePage = () => {
         PasswordField: 'wide',
         AssortmentBreadcrumbs: 'wide',
         AddToCartButton: 'wide',
+        SelectField: 'wide',
+        SubmitButton: 'wide',
+        FormErrors: 'wide',
+        LanguageSwitch: 'wide',
 
         // Tall (1x2) - Vertically oriented components
         Toggle: 'tall',
         StatusInformation: 'tall',
         NoData: 'tall',
+        SideCart: 'tall',
 
         // Medium (1.5x1.5) - Moderately complex
-        ThemeToggle: 'medium',
-        SelectField: 'medium',
+        'Product Price': 'medium',
+        'Image With Fallback': 'medium',
+        'Confetti Celebration': 'medium',
 
         // Regular (1x1) - Simple components
         Loading: 'regular',
@@ -1791,10 +1895,7 @@ const StyleguidePage = () => {
           '<Badge text="Inactive" color="red" dotted />',
           '<Badge text="Pending" color="blue" dotted />',
         ],
-        Toggle: [
-          '<Toggle checked={state} onChange={setState} />',
-          '<ThemeToggle />',
-        ],
+        Toggle: ['<Toggle checked={state} onChange={setState} />'],
         Loading: ['<Loading />'],
         TextField: ['<TextField name="sample" placeholder="Enter text..." />'],
         EmailField: [
@@ -1804,6 +1905,11 @@ const StyleguidePage = () => {
           '<PasswordField name="password" placeholder="Enter password..." />',
         ],
         SearchField: ['<SearchField value={value} onChange={onChange} />'],
+        SelectField: [
+          '<SelectField name="field" label="Label" options={options} />',
+        ],
+        SubmitButton: ['<SubmitButton>Submit</SubmitButton>'],
+        FormErrors: ['<FormErrors />'],
         AnimatedCheckmark: [
           '<AnimatedCheckmark size={24} />',
           '<AnimatedCheckmark size={32} delay={500} />',
@@ -1815,16 +1921,23 @@ const StyleguidePage = () => {
         FadeInSection: [
           '<FadeInSection>\n  <div>Content</div>\n</FadeInSection>',
         ],
-        Accordion: [
-          '<Accordion title="Click to expand">\n  Content\n</Accordion>',
-        ],
+        'Confetti Celebration': ['<ConfettiCelebration />'],
         ProductListItem: ['<ProductListItem product={productData} />'],
+        ProductListItemRow: ['<ProductListItemRow product={productData} />'],
+        ProductList: ['<ProductList products={productsArray} />'],
+        'Product Price': ['<ProductPrice price={priceObject} />'],
+        'Image With Fallback': [
+          '<ImageWithFallback src={url} alt="text" width={128} height={128} />',
+        ],
         CartItem: ['<CartItem item={cartItemData} />'],
         AddToCartButton: ['<AddToCartButton productId={productId} />'],
         CategoryListItem: ['<CategoryListItem category={categoryData} />'],
         AssortmentBreadcrumbs: [
           '<AssortmentBreadcrumbs assortment={assortmentData} />',
         ],
+        SideCart: ['<SideCart />'],
+        LanguageSwitch: ['<LanguageSwitch />'],
+        AgeVerificationButton: ['<AgeVerificationButton />'],
         NoData: ['<NoData />'],
         ErrorMessage: ['<ErrorMessage message="Something went wrong" />'],
         StatusInformation: ['<StatusInformation message="Order confirmed" />'],
@@ -1959,12 +2072,15 @@ const StyleguidePage = () => {
         <div className="mb-8">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-4xl font-semibold mb-2 text-slate-900 dark:text-white">
-                Design System Styleguide
+              <h1 className="text-5xl font-bold mb-3 text-slate-900 dark:text-white">
+                Unchained Commerce
               </h1>
-              <p className="text-slate-600 dark:text-slate-400">
-                Complete overview of components and colors used in the Unchained
-                Storefront
+              <h2 className="text-3xl font-semibold mb-3 text-slate-700 dark:text-slate-300">
+                Design System Styleguide
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
+                Complete design system documentation for the Unchained Commerce
+                Demo Shop. Built with Tailwind CSS and modern React components.
               </p>
             </div>
             <div className="flex items-center space-x-4">
@@ -1983,6 +2099,46 @@ const StyleguidePage = () => {
                   <MoonIcon className="h-5 w-5 text-slate-700" />
                 )}
               </button>
+            </div>
+          </div>
+
+          {/* Design System Overview */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <Squares2X2Icon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                  70+ Components
+                </h3>
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Reusable UI components with comprehensive examples and
+                documentation
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-800 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <PhotoIcon className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                  29 Heroicons
+                </h3>
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Carefully curated icon library for consistent visual language
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <CheckBadgeIcon className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                  Headless Commerce
+                </h3>
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Open-source platform for flexible e-commerce solutions
+              </p>
             </div>
           </div>
         </div>
