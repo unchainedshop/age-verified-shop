@@ -1,6 +1,7 @@
 pipeline {
   agent any
   environment {
+    DOCKER_BUILDKIT = 0
     REGISTRY_AUTH = credentials('ucc-registry-unchained')
   }
   tools { dockerTool "docker" }
