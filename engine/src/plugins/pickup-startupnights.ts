@@ -60,7 +60,9 @@ const PickupStartupNights: IDeliveryAdapter = {
         const { modules, order } = context;
 
         const pricing = OrderPricingSheet(order);
-        const orderItems = await modules.orders.positions.findOrderPositions({ orderId: order._id });
+        const orderItems = await modules.orders.positions.findOrderPositions({
+          orderId: order._id,
+        });
         const items = [];
 
         for (const item of orderItems) {
@@ -68,7 +70,7 @@ const PickupStartupNights: IDeliveryAdapter = {
           const productText = await modules.products.texts.findLocalizedText({
             productId: item.productId,
             locale: modules.users.userLocale(order.context.user),
-          })
+          });
           items.push({
             name: productText.title,
             quantity: item.quantity || 1,

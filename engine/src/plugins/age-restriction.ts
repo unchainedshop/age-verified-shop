@@ -3,50 +3,59 @@ import {
   FilterAdapter,
   type UnchainedCore,
   type IFilterAdapter,
-} from '@unchainedshop/core';
+} from "@unchainedshop/core";
 
 const AgeRestriction: IFilterAdapter = {
   ...FilterAdapter,
 
-  key: 'ch.age.limited',
-  label: 'Limitiere Scope für User',
-  version: '1.0',
+  key: "ch.age.limited",
+  label: "Limitiere Scope für User",
+  version: "1.0",
   orderIndex: 11,
 
   actions: (rawContext) => {
     const context = rawContext as typeof rawContext & UnchainedCore & { user };
     const { searchQuery } = context;
 
-    const userId = searchQuery?.filterQuery?.find((q) => q.key === 'userId')?.value || searchQuery?.queryString;
-    
+    const userId =
+      searchQuery?.filterQuery?.find((q) => q.key === "userId")?.value ||
+      searchQuery?.queryString;
+
     return {
       ...FilterAdapter.actions(context),
 
       async searchAssortments(params, options) {
-        const assortmentIds = params.assortmentIds || (await context.modules.assortments.findAssortmentIds({}));
+        const assortmentIds =
+          params.assortmentIds ||
+          (await context.modules.assortments.findAssortmentIds({}));
         if (!assortmentIds) return assortmentIds;
 
         const user = await context.modules.users.findUserById(userId);
         if (!user.meta?.ageVerification?.status) return assortmentIds;
 
-        const isAge16OrAbove = user.meta?.ageVerification?.age_over_16 === 'true';
-        const isAge18OrAbove = user.meta?.ageVerification?.age_over_18 === 'true';
+        const isAge16OrAbove =
+          user.meta?.ageVerification?.age_over_16 === "true";
+        const isAge18OrAbove =
+          user.meta?.ageVerification?.age_over_18 === "true";
 
         if (isAge18OrAbove) return assortmentIds;
 
-        const restrictedSpirits = await context.modules.assortments.findAssortmentIds({
-            "tags": ["spirit"]
-        }) || [];
+        const restrictedSpirits =
+          (await context.modules.assortments.findAssortmentIds({
+            tags: ["spirit"],
+          })) || [];
 
-        const restrictedBeers = !isAge16OrAbove ? await context.modules.assortments.findAssortmentIds({
-            "tags": ["beer-wine"]
-        }) : [];
+        const restrictedBeers = !isAge16OrAbove
+          ? await context.modules.assortments.findAssortmentIds({
+              tags: ["beer-wine"],
+            })
+          : [];
 
-        const restrictedIds =  [...restrictedBeers, ...restrictedSpirits];
+        const restrictedIds = [...restrictedBeers, ...restrictedSpirits];
 
         return assortmentIds.filter((id) => {
-        //   const isPartOfBlacklist = blacklistedProductIds.includes(id);
-        //   const isPartOfWhitelist = whitelistedProductIds.includes(id);
+          //   const isPartOfBlacklist = blacklistedProductIds.includes(id);
+          //   const isPartOfWhitelist = whitelistedProductIds.includes(id);
           const isAllowed = !restrictedIds || !restrictedIds.includes(id);
 
           if (isAllowed) {
@@ -60,28 +69,35 @@ const AgeRestriction: IFilterAdapter = {
       },
 
       async searchProducts(params) {
-        const productIds = params.productIds || (await context.modules.products.findProductIds({}));
+        const productIds =
+          params.productIds ||
+          (await context.modules.products.findProductIds({}));
 
         const user = await context.modules.users.findUserById(userId);
         if (!user.meta?.ageVerification?.status) return productIds;
 
-        const isAge16OrAbove = user.meta?.ageVerification?.age_over_16 === 'true';
-        const isAge18OrAbove = user.meta?.ageVerification?.age_over_18 === 'true';
+        const isAge16OrAbove =
+          user.meta?.ageVerification?.age_over_16 === "true";
+        const isAge18OrAbove =
+          user.meta?.ageVerification?.age_over_18 === "true";
         if (isAge18OrAbove) return productIds;
 
-        const restrictedSpirits = await context.modules.products.findProductIds({
-            "tags": ["spirit"]
-        }) || [];
+        const restrictedSpirits =
+          (await context.modules.products.findProductIds({
+            tags: ["spirit"],
+          })) || [];
 
-        const restrictedBeers = !isAge16OrAbove ? await context.modules.products.findProductIds({
-            "tags": ["beer-wine"]
-        }) : [];
+        const restrictedBeers = !isAge16OrAbove
+          ? await context.modules.products.findProductIds({
+              tags: ["beer-wine"],
+            })
+          : [];
 
-        const restrictedIds =  [...restrictedBeers, ...restrictedSpirits];
+        const restrictedIds = [...restrictedBeers, ...restrictedSpirits];
 
         return productIds.filter((id) => {
-        //   const isPartOfBlacklist = blacklistedProductIds.includes(id);
-        //   const isPartOfWhitelist = whitelistedProductIds.includes(id);
+          //   const isPartOfBlacklist = blacklistedProductIds.includes(id);
+          //   const isPartOfWhitelist = whitelistedProductIds.includes(id);
           const isAllowed = !restrictedIds || !restrictedIds.includes(id);
 
           if (isAllowed) {
@@ -92,8 +108,8 @@ const AgeRestriction: IFilterAdapter = {
           // No whitelist, so reduce the result set by the blacklist
           return false;
         });
-      }
-    }
+      },
+    };
   },
 };
 

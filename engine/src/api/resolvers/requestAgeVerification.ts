@@ -5,7 +5,11 @@ import { pubSub } from "../bus.ts";
 const { SWIYU_VERIFIER_ENDPOINT } = process.env;
 
 export default {
-  subscribe: async function (root: unknown, { force }: never, context: Context) {
+  subscribe: async function (
+    root: unknown,
+    { force }: never,
+    context: Context,
+  ) {
     const { user, userId } = context;
     log(`subscription requestAgeVerification`, { userId });
 
@@ -21,14 +25,14 @@ export default {
             headers: {
               accept: "application/json",
             },
-          }
+          },
         );
         if (response.status === 200) {
           const data = await response.json();
           const subscription = pubSub.subscribe(`verifier-response:${data.id}`);
-            setTimeout(() => {
-              pubSub.publish(`verifier-response:${data.id}`, data);
-            }, 100);
+          setTimeout(() => {
+            pubSub.publish(`verifier-response:${data.id}`, data);
+          }, 100);
           if (data.state === "PENDING" || !force) {
             return subscription;
           }
@@ -89,7 +93,7 @@ export default {
 
     if (response.status !== 200) {
       throw new Error(
-        `Failed to request age verification: ${await response.text()}`
+        `Failed to request age verification: ${await response.text()}`,
       );
     }
 

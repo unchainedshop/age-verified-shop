@@ -10,5 +10,5 @@ export default {
   },
   async presentationDefinition(body) {
     return body.presentation_definition;
-  }
+  },
 };

@@ -10,33 +10,35 @@ export default async function swiyuCallbackHandler(
       verification_id: string;
     };
   }> & { unchainedContext: Context },
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
   try {
     request.log.info(
-      `Received Swiyu callback for: ${request.body.verification_id}`
+      `Received Swiyu callback for: ${request.body.verification_id}`,
     );
 
-    if (process.env.SWIYU_WEBHOOK_API_KEY && request.headers["x-api-key"] !== process.env.SWIYU_WEBHOOK_API_KEY) {
+    if (
+      process.env.SWIYU_WEBHOOK_API_KEY &&
+      request.headers["x-api-key"] !== process.env.SWIYU_WEBHOOK_API_KEY
+    ) {
       console.error(request.headers);
       throw new Error("Invalid Webhook API Key");
     }
 
     // Validate and construct URL safely to prevent SSRF
-    const verificationUrl = new URL(`${SWIYU_VERIFIER_ENDPOINT}/verifications/${encodeURIComponent(request.body.verification_id)}`);
-
-    const response = await fetch(
-      verificationUrl.toString(),
-      {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-        },
-      }
+    const verificationUrl = new URL(
+      `${SWIYU_VERIFIER_ENDPOINT}/verifications/${encodeURIComponent(request.body.verification_id)}`,
     );
+
+    const response = await fetch(verificationUrl.toString(), {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+      },
+    });
     if (response.status !== 200) {
       throw new Error(
-        `Failed to fetch age verification status: ${await response.text()}`
+        `Failed to fetch age verification status: ${await response.text()}`,
       );
     }
     const data = await response.json();

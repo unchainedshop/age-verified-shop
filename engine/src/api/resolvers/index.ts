@@ -12,6 +12,6 @@ export default [
       checkAgeVerification,
     },
     SwiyuVerifierManagementResponse,
-    User
+    User,
   },
 ];
