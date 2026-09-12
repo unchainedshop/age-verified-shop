@@ -14,6 +14,8 @@ COPY package* /webapp/
 ENV PORT=3000
 ENV NODE_ENV=production
 
+# Provided by CI (--build-arg GIT_COMMIT=<sha>); written to version.txt below.
+ARG GIT_COMMIT
 RUN echo "${GIT_COMMIT}" > /webapp/version.txt && npm ci
 
 COPY . /webapp/

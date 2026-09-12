@@ -1,0 +1,124 @@
+name: CI
+
+# Forgejo Actions pipeline (replaces the root Jenkinsfile).
+# Builds the two app images and publishes them to the git.ucc.dev package
+# registry, gated by a Trivy vulnerability scan. See MIGRATION.md for the
+# one-time repo/secret setup and the GitHub push-mirror (phase 2).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  REGISTRY: git.ucc.dev
+  REGISTRY_REPO: unchained/age-verified-shop
+
+jobs:
+  # Source-dependency scan. Hard-gates on fixable HIGH/CRITICAL (ADR-003).
+  # Runs on push AND pull_request so PRs are blocked before merge.
+  trivy:
+    name: Trivy vuln gate
+    runs-on: docker
+    container:
+      image: ghcr.io/aquasecurity/trivy:0.72.0@sha256:cffe3f5161a47a6823fbd23d985795b3ed72a4c806da4c4df16266c02accdd6f
+    env:
+      TRIVY_CACHE_DIR: /tmp/trivy-cache
+    steps:
+      - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: trivydate
+        run: echo "d=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
+      - uses: https://code.forgejo.org/actions/cache@v4
+        with:
+          path: /tmp/trivy-cache
+          # Date-rotating key + restore-keys: warm-start from the previous day's
+          # DB, then let Trivy refresh it (and re-save under today's key) so the
+          # vuln DB never freezes. A constant key would pin the DB forever.
+          key: trivy-db-${{ runner.os }}-${{ steps.trivydate.outputs.d }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+      - name: trivy fs (fixable HIGH/CRITICAL gate)
+        run: |
+          trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --ignore-unfixed \
+            --no-progress --disable-telemetry .
+
+  engine:
+    name: Build engine
+    runs-on: docker
+    needs: [trivy]
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-config-inline: |
+            [registry."${{ env.REGISTRY }}"]
+              mirrors = ["${{ env.REGISTRY }}"]
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/engine
+          tags: |
+            type=sha,prefix=sha-,format=short
+            type=raw,value=${{ github.ref_name }}-latest,enable=${{ github.ref_type == 'branch' }}
+            type=raw,value=stable,enable=${{ github.ref_name == 'main' }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./engine
+          file: ./engine/Dockerfile
+          push: true
+          provenance: false
+          build-args: |
+            GIT_COMMIT=${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/engine:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/engine:buildcache,mode=max,ignore-error=true
+
+  # NEXT_PUBLIC_* values are baked into the client bundle at build time, so the
+  # storefront image is environment-specific. Seed values (swiyu.unchained.wtf)
+  # live in repo Variables — see MIGRATION.md.
+  storefront:
+    name: Build storefront
+    runs-on: docker
+    needs: [trivy]
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-config-inline: |
+            [registry."${{ env.REGISTRY }}"]
+              mirrors = ["${{ env.REGISTRY }}"]
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/storefront
+          tags: |
+            type=sha,prefix=sha-,format=short
+            type=raw,value=${{ github.ref_name }}-latest,enable=${{ github.ref_type == 'branch' }}
+            type=raw,value=stable,enable=${{ github.ref_name == 'main' }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./storefront
+          file: ./storefront/Dockerfile
+          push: true
+          provenance: false
+          build-args: |
+            NEXT_PUBLIC_GRAPHQL_ENDPOINT=${{ vars.NEXT_PUBLIC_GRAPHQL_ENDPOINT }}
+            UNCHAINED_ENDPOINT=${{ vars.UNCHAINED_ENDPOINT }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/storefront:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/storefront:buildcache,mode=max,ignore-error=true

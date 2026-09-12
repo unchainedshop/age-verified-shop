@@ -16,7 +16,7 @@ services:
 
   engine:
     hostname: swiyu-engine
-    image: registry.ucc.dev/unchained/age-verified-shop/engine:stable
+    image: git.ucc.dev/unchained/age-verified-shop/engine:stable
     extra_hosts:
       - swiyu.unchained.wtf:host-gateway
     environment:
@@ -65,7 +65,7 @@ services:
         - "traefik.http.services.swiyu-engine.loadbalancer.server.port=3000"
 
   storefront:
-    image: registry.ucc.dev/unchained/age-verified-shop/storefront:stable
+    image: git.ucc.dev/unchained/age-verified-shop/storefront:stable
     hostname: swiyu-storefront
     environment:
       NEXT_PUBLIC_GRAPHQL_ENDPOINT: https://swiyu.unchained.wtf/graphql
