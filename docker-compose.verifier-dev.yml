@@ -1,0 +1,59 @@
+# Local dev/test instance of the swiyu verifier + its Postgres, wired to the
+# engine running on the host via `npm run dev` (port 4010).
+#
+# Usage:
+#   1. Start Docker Desktop.
+#   2. cp .env.verifier.example .env.verifier   and fill in SIGNING_KEY
+#      (the private key for VERIFIER_DID; not in the repo).
+#   3. docker compose -f docker-compose.verifier-dev.yml --env-file .env.verifier up -d
+#   4. The engine already points at http://localhost:8080/management/api
+#      (engine/.env.defaults SWIYU_VERIFIER_ENDPOINT), so no engine change is
+#      needed for the request/status calls. For webhook auth, either leave
+#      SWIYU_WEBHOOK_API_KEY unset on the engine (the callback check is skipped)
+#      or set it to the same value as WEBHOOK_API_KEY_VALUE here.
+#
+# NOTE: EXTERNAL_URL must be reachable by the SWIYU wallet (a phone) to complete
+# an end-to-end verification. localhost is fine to make the QR/link appear in the
+# storefront UI, but scanning it from a real wallet needs a public tunnel
+# (e.g. `cloudflared tunnel --url http://localhost:8080`) set as EXTERNAL_URL.
+
+services:
+  verifier_postgres:
+    image: postgres:15.8
+    environment:
+      POSTGRES_USER: verifier_mgmt_user
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: verifier_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verifier_mgmt_user -d verifier_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  verifier:
+    image: ghcr.io/swiyu-admin-ch/swiyu-verifier:2.0.2
+    depends_on:
+      verifier_postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./metadata.json:/verifier_metadata.json:ro
+    environment:
+      VERIFIER_DID: ${VERIFIER_DID}
+      DID_VERIFICATION_METHOD: ${DID_VERIFICATION_METHOD}
+      VERIFIER_NAME: "Demo Shop (local dev)"
+      EXTERNAL_URL: ${EXTERNAL_URL:-http://localhost:8080}
+      OPENID_CLIENT_METADATA_FILE: "file:/verifier_metadata.json"
+      SIGNING_KEY: ${SIGNING_KEY}
+      POSTGRES_USER: verifier_mgmt_user
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: verifier_db
+      POSTGRES_JDBC: "jdbc:postgresql://verifier_postgres:5432/verifier_db"
+      # Verifier (in the container) calls back to the engine on the host.
+      WEBHOOK_CALLBACK_URI: "http://host.docker.internal:4010/rest/swiyu-callback"
+      WEBHOOK_API_KEY_HEADER: X-API-Key
+      WEBHOOK_API_KEY_VALUE: ${WEBHOOK_API_KEY_VALUE:-dev-webhook-key}
+      WEBHOOK_INTERVAL: 100
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
