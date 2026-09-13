@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Log in to the Forgejo container registry
-        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
+        run: echo "${{ secrets.PKG_PUSH_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
       - name: Build + push engine
         run: |
           set -euo pipefail
@@ -79,7 +79,7 @@ jobs:
     steps:
       - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Log in to the Forgejo container registry
-        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
+        run: echo "${{ secrets.PKG_PUSH_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
       - name: Build + push storefront
         env:
           NEXT_PUBLIC_GRAPHQL_ENDPOINT: ${{ vars.NEXT_PUBLIC_GRAPHQL_ENDPOINT }}

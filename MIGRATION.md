@@ -50,7 +50,7 @@ label `docker`) picks the jobs up automatically.
 
 | Kind | Name | Value |
 |---|---|---|
-| Secret | `REGISTRY_TOKEN` | a **`write:package`** PAT for the `unchained` org (used to `docker login git.ucc.dev`; the automatic Actions token cannot push packages). |
+| Secret | `PKG_PUSH_TOKEN` | a **`write:package`** PAT for the `unchained` org (used to `docker login git.ucc.dev`; the automatic Actions token cannot push packages). |
 | Variable | `NEXT_PUBLIC_GRAPHQL_ENDPOINT` | `https://swiyu.unchained.wtf/graphql` |
 | Variable | `UNCHAINED_ENDPOINT` | `https://swiyu.unchained.wtf/graphql` |
 
