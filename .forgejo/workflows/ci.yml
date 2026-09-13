@@ -27,27 +27,21 @@ jobs:
   trivy:
     name: Trivy vuln gate
     runs-on: docker
-    container:
-      image: ghcr.io/aquasecurity/trivy:0.72.0@sha256:cffe3f5161a47a6823fbd23d985795b3ed72a4c806da4c4df16266c02accdd6f
-    env:
-      TRIVY_CACHE_DIR: /tmp/trivy-cache
     steps:
       - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - id: trivydate
-        run: echo "d=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
-      - uses: https://code.forgejo.org/actions/cache@v4
-        with:
-          path: /tmp/trivy-cache
-          # Date-rotating key + restore-keys: warm-start from the previous day's
-          # DB, then let Trivy refresh it (and re-save under today's key) so the
-          # vuln DB never freezes. A constant key would pin the DB forever.
-          key: trivy-db-${{ runner.os }}-${{ steps.trivydate.outputs.d }}
-          restore-keys: |
-            trivy-db-${{ runner.os }}-
+      # Trivy runs as a digest-pinned container-action STEP, not a job `container:`.
+      # The minimal trivy image has no Node, so running the whole job inside it
+      # kills the JS checkout action with `exec: "node": not found`. Keeping the
+      # job on the default runner (which has Node) and invoking trivy as a
+      # `docker://` step preserves ADR-003's pinned image: Forgejo mounts the
+      # workspace into the step container and runs trivy's entrypoint with `args`.
+      # (Vuln-DB caching was dropped with the job container; trivy re-downloads the
+      # DB each run — cheap and reliable. Re-add via a workspace-mounted cache dir
+      # if run frequency makes it worth it.)
       - name: trivy fs (fixable HIGH/CRITICAL gate)
-        run: |
-          trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --ignore-unfixed \
-            --no-progress --disable-telemetry .
+        uses: docker://ghcr.io/aquasecurity/trivy:0.72.0@sha256:cffe3f5161a47a6823fbd23d985795b3ed72a4c806da4c4df16266c02accdd6f
+        with:
+          args: fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --ignore-unfixed --no-progress --disable-telemetry .
 
   # Raw docker build/push against the runner's host daemon (docker.sock automount)
   # — mirrors the infrastructure repo's build workflow. We deliberately avoid the
