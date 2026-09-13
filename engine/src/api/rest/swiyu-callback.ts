@@ -44,9 +44,10 @@ export default async function swiyuCallbackHandler(
     const data = await response.json();
 
     const user = await request.unchainedContext.modules.users.findUser({
+      // MongoDB dotted-path query; not expressible in the typed UserQuery shape.
       "meta.ageVerification.requestId": request.body.verification_id,
       includeGuests: true,
-    });
+    } as any);
 
     if (data.state === "SUCCESS" && user) {
       await request.unchainedContext.modules.users.updateProfile(user._id, {

@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    // TypeScript 7 defaults "strict" to true; this project has always been
+    // non-strict, so keep that posture explicit rather than annotate everything.
+    "strict": false,
     "resolveJsonModule": true,
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
@@ -11,8 +14,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "target": "esnext",
-    "types": ["node"],
-    "baseUrl": "." // This must be specified if "paths" is.
+    "types": ["node"]
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules", "lib"]

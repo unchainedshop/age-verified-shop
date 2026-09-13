@@ -33,9 +33,10 @@ export default async function checkAgeVerification(
   const data = await response.json();
 
   const updatedUser = await context.modules.users.findUser({
+    // MongoDB dotted-path query; not expressible in the typed UserQuery shape.
     "meta.ageVerification.requestId": requestId,
     includeGuests: true,
-  });
+  } as any);
 
   if (data.state === "SUCCESS") {
     await context.modules.users.updateProfile(updatedUser._id, {
