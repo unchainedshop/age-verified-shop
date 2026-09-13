@@ -6,6 +6,7 @@ import {
   split,
   from,
   ApolloLink,
+  CombinedGraphQLErrors,
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import merge from 'deepmerge';
@@ -17,28 +18,28 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient;
 
-const errorLink = onError(
-  ({ graphQLErrors, networkError, operation, forward }) => {
-    if (graphQLErrors) {
-      console.error('[GraphQL Errors]:', graphQLErrors);
-      graphQLErrors.forEach(({ message, locations, path, extensions }) => {
-        console.error(
-          `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(locations)}, Path: ${JSON.stringify(path)}, Extensions: ${JSON.stringify(extensions)}`,
-        );
-        console.error(
-          'Operation:',
-          operation.operationName,
-          operation.query.loc?.source?.body,
-        );
-      });
-    }
-    if (networkError) {
-      console.error(`[Network error]:`, networkError);
-      console.error('Operation:', operation.operationName);
-      console.error('Variables:', operation.variables);
-    }
-  },
-);
+// Apollo Client 4 changed the error-link callback: it now receives a single
+// `error` (ErrorLike) instead of separate graphQLErrors/networkError. GraphQL
+// errors arrive as a CombinedGraphQLErrors instance (detected via .is()).
+const errorLink = onError(({ error, operation }) => {
+  if (CombinedGraphQLErrors.is(error)) {
+    console.error('[GraphQL Errors]:', error.errors);
+    error.errors.forEach(({ message, locations, path, extensions }) => {
+      console.error(
+        `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(locations)}, Path: ${JSON.stringify(path)}, Extensions: ${JSON.stringify(extensions)}`,
+      );
+      console.error(
+        'Operation:',
+        operation.operationName,
+        operation.query.loc?.source?.body,
+      );
+    });
+  } else if (error) {
+    console.error(`[Network error]:`, error);
+    console.error('Operation:', operation.operationName);
+    console.error('Variables:', operation.variables);
+  }
+});
 
 const uri =
   typeof window === 'undefined'

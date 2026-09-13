@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useIntl } from "react-intl";
-import useUpdateUserProfile from "../../auth/hooks/useUpdateUserProfile";
-import Form from "../../forms/components/Form";
-import SelectField from "../../forms/components/SelectField";
-import SubmitButton from "../../forms/components/SubmitButton";
-import TextField from "../../forms/components/TextField";
-import COUNTRIES from "../data/countries-list";
-import Button from "./Button";
+import { useState } from 'react';
+import { useIntl } from 'react-intl';
+import useUpdateUserProfile from '../../auth/hooks/useUpdateUserProfile';
+import Form from '../../forms/components/Form';
+import SelectField from '../../forms/components/SelectField';
+import SubmitButton from '../../forms/components/SubmitButton';
+import TextField from '../../forms/components/TextField';
+import COUNTRIES from '../data/countries-list';
+import Button from './Button';
 
 const Address = ({ user }) => {
   const { formatMessage } = useIntl();
@@ -70,15 +70,15 @@ const Address = ({ user }) => {
                   className="text-lg font-medium leading-6 text-slate-900 dark:text-slate-100"
                 >
                   {formatMessage({
-                    id: "address",
-                    defaultMessage: "Address",
+                    id: 'address',
+                    defaultMessage: 'Address',
                   })}
                 </h1>
                 {!updateProfile && (
                   <Button
                     text={formatMessage({
-                      id: "update",
-                      defaultMessage: "Update",
+                      id: 'update',
+                      defaultMessage: 'Update',
                     })}
                     type="button"
                     onClick={() => setUpdateProfile(true)}
@@ -92,8 +92,8 @@ const Address = ({ user }) => {
                 <div className="col-span-4 sm:col-span-2">
                   <div className="mb-1">
                     {formatMessage({
-                      id: "address",
-                      defaultMessage: "Address",
+                      id: 'address',
+                      defaultMessage: 'Address',
                     })}
                   </div>
                   {updateProfile ? (
@@ -114,15 +114,15 @@ const Address = ({ user }) => {
                   <div className="mb-1 flex justify-between">
                     <span>
                       {formatMessage({
-                        id: "address_2",
-                        defaultMessage: "Address 2",
+                        id: 'address_2',
+                        defaultMessage: 'Address 2',
                       })}
                     </span>
                     {updateProfile && (
                       <span className="text-sm text-slate-500">
                         {formatMessage({
-                          id: "address2_optional",
-                          defaultMessage: "Optional",
+                          id: 'address2_optional',
+                          defaultMessage: 'Optional',
                         })}
                       </span>
                     )}
@@ -142,8 +142,8 @@ const Address = ({ user }) => {
                 <div className="col-span-4 sm:col-span-2">
                   <div className="mb-1">
                     {formatMessage({
-                      id: "telephone",
-                      defaultMessage: "Telephone",
+                      id: 'telephone',
+                      defaultMessage: 'Telephone',
                     })}
                   </div>
                   {updateProfile ? (
@@ -161,8 +161,8 @@ const Address = ({ user }) => {
                 <div className="col-span-4 sm:col-span-2">
                   <div className="mb-1">
                     {formatMessage({
-                      id: "postal-code",
-                      defaultMessage: "Postal code",
+                      id: 'postal-code',
+                      defaultMessage: 'Postal code',
                     })}
                   </div>
                   {updateProfile ? (
@@ -184,8 +184,8 @@ const Address = ({ user }) => {
                     <div className="mt-1">
                       <SelectField
                         label={formatMessage({
-                          id: "country",
-                          defaultMessage: "Country",
+                          id: 'country',
+                          defaultMessage: 'Country',
                         })}
                         name="countryCode"
                         defaultValue={profile?.address?.countryCode}
@@ -212,15 +212,15 @@ const Address = ({ user }) => {
                   <div className="mb-1 flex justify-between">
                     <span>
                       {formatMessage({
-                        id: "region",
-                        defaultMessage: "Region",
+                        id: 'region',
+                        defaultMessage: 'Region',
                       })}
                     </span>
                     {updateProfile && (
                       <span className="text-sm text-slate-500">
                         {formatMessage({
-                          id: "region_optional",
-                          defaultMessage: "Optional",
+                          id: 'region_optional',
+                          defaultMessage: 'Optional',
                         })}
                       </span>
                     )}
@@ -242,8 +242,8 @@ const Address = ({ user }) => {
                 <div className="col-span-4 sm:col-span-2">
                   <div className="mb-1">
                     {formatMessage({
-                      id: "city",
-                      defaultMessage: "City",
+                      id: 'city',
+                      defaultMessage: 'City',
                     })}
                   </div>
                   {updateProfile ? (
@@ -265,8 +265,8 @@ const Address = ({ user }) => {
                   <Button
                     type="button"
                     text={formatMessage({
-                      id: "cancel",
-                      defaultMessage: "Cancel",
+                      id: 'cancel',
+                      defaultMessage: 'Cancel',
                     })}
                     onClick={onProfileUpdateComplete}
                     variant="secondary"
@@ -274,8 +274,8 @@ const Address = ({ user }) => {
                   />
                   <SubmitButton className="text-sm px-3 py-1.5">
                     {formatMessage({
-                      id: "save",
-                      defaultMessage: "Save",
+                      id: 'save',
+                      defaultMessage: 'Save',
                     })}
                   </SubmitButton>
                 </div>

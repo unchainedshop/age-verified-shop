@@ -1,12 +1,16 @@
-import { parse, serialize } from 'cookie';
+import { parseCookie, stringifySetCookie } from 'cookie';
 
 export const dynamic = 'force-dynamic';
 
 function rewriteCookie(setCookieHeader) {
   if (!setCookieHeader) return null;
-  const cookies = parse(setCookieHeader);
+  const cookies = parseCookie(setCookieHeader);
   const tokenKey = Object.keys(cookies).find((k) => k.includes('token'));
-  return serialize(tokenKey, cookies[tokenKey], {
+  // cookie v2 splits serialization: stringifySetCookie emits a Set-Cookie
+  // header (with attributes) from a { name, value, ...attrs } object.
+  return stringifySetCookie({
+    name: tokenKey,
+    value: cookies[tokenKey],
     path: '/',
     httpOnly: true,
     secure: false,

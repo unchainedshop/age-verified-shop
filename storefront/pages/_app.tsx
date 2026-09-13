@@ -1,6 +1,6 @@
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 
 import IntlWrapper from '../modules/i18n/components/IntlWrapper';
 import { useApollo } from '../modules/apollo/apolloClient';
@@ -12,14 +12,17 @@ import '../styles/globals.css';
 import PushNotificationWrapper from '../modules/context/push-notification/PushNotificationWrapper';
 
 const UnchainedApp = ({ Component, pageProps, router }) => {
-  const apollo = useApollo(pageProps, { locale: router.locale });
-  const messages = getMessages(router.locale);
+  // Next 16 dropped Pages Router i18n routing; router.locale may be undefined,
+  // so default to the former defaultLocale ('en').
+  const locale = router.locale || 'en';
+  const apollo = useApollo(pageProps, { locale });
+  const messages = getMessages(locale);
 
   // Check if the current page has hero section based on route
   const hasHeroSection = router.pathname === '/';
 
   return (
-    <IntlWrapper locale={router.locale} messages={messages} key="intl-provider">
+    <IntlWrapper locale={locale} messages={messages} key="intl-provider">
       <AppContextWrapper>
         <ApolloProvider client={apollo}>
           <PushNotificationWrapper>

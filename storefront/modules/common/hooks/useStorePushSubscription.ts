@@ -1,4 +1,5 @@
-import { useMutation, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 
 const STORE_SUBSCRIPTION_MUTATION = gql`
   mutation StorePushSubscription($subscription: JSON!) {
@@ -15,7 +16,9 @@ const STORE_SUBSCRIPTION_MUTATION = gql`
 `;
 
 const useStorePushSubscription = () => {
-  const [storeSubscriptionMutation] = useMutation(STORE_SUBSCRIPTION_MUTATION);
+  const [storeSubscriptionMutation] = useMutation<any>(
+    STORE_SUBSCRIPTION_MUTATION,
+  );
 
   const storeSubscription = async ({ subscription }) => {
     return storeSubscriptionMutation({ variables: { subscription } });

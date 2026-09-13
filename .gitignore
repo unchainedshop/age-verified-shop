@@ -1,1 +1,5 @@
 node_modules
+.db
+.db.old-*
+engine/.db
+.env.verifier

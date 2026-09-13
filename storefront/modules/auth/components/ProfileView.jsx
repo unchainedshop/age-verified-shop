@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useIntl } from "react-intl";
+import { useState } from 'react';
+import { useIntl } from 'react-intl';
 
-import useUpdateUserProfile from "../hooks/useUpdateUserProfile";
-import Button from "../../common/components/Button";
+import useUpdateUserProfile from '../hooks/useUpdateUserProfile';
+import Button from '../../common/components/Button';
 
-import TextField from "../../forms/components/TextField";
-import Form from "../../forms/components/Form";
-import SubmitButton from "../../forms/components/SubmitButton";
+import TextField from '../../forms/components/TextField';
+import Form from '../../forms/components/Form';
+import SubmitButton from '../../forms/components/SubmitButton';
 
 const ProfileView = ({ user }) => {
   const { formatMessage } = useIntl();
@@ -66,16 +66,16 @@ const ProfileView = ({ user }) => {
                 className="text-lg font-medium leading-6 text-slate-900 dark:text-white"
               >
                 {formatMessage({
-                  id: "account",
-                  defaultMessage: "Account",
+                  id: 'account',
+                  defaultMessage: 'Account',
                 })}
               </h3>
               {!updateProfile && (
                 <Button
                   type="button"
                   text={formatMessage({
-                    id: "update",
-                    defaultMessage: "Update",
+                    id: 'update',
+                    defaultMessage: 'Update',
                   })}
                   onClick={() => setUpdateProfile(true)}
                   variant="secondary"
@@ -89,8 +89,8 @@ const ProfileView = ({ user }) => {
                 <div>
                   <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
                     {formatMessage({
-                      id: "first_name",
-                      defaultMessage: "First name",
+                      id: 'first_name',
+                      defaultMessage: 'First name',
                     })}
                   </label>
                   {updateProfile ? (
@@ -101,7 +101,7 @@ const ProfileView = ({ user }) => {
                     />
                   ) : (
                     <div className="text-sm text-slate-900 dark:text-white py-2">
-                      {user?.profile?.address?.firstName || "—"}
+                      {user?.profile?.address?.firstName || '—'}
                     </div>
                   )}
                 </div>
@@ -109,8 +109,8 @@ const ProfileView = ({ user }) => {
                 <div>
                   <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
                     {formatMessage({
-                      id: "last_name",
-                      defaultMessage: "Last name",
+                      id: 'last_name',
+                      defaultMessage: 'Last name',
                     })}
                   </label>
                   {updateProfile ? (
@@ -121,7 +121,7 @@ const ProfileView = ({ user }) => {
                     />
                   ) : (
                     <div className="text-sm text-slate-900 dark:text-white py-2">
-                      {user?.profile?.address?.lastName || "—"}
+                      {user?.profile?.address?.lastName || '—'}
                     </div>
                   )}
                 </div>
@@ -130,8 +130,8 @@ const ProfileView = ({ user }) => {
               <div>
                 <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
                   {formatMessage({
-                    id: "company",
-                    defaultMessage: "Company",
+                    id: 'company',
+                    defaultMessage: 'Company',
                   })}
                 </label>
                 {updateProfile ? (
@@ -142,7 +142,7 @@ const ProfileView = ({ user }) => {
                   />
                 ) : (
                   <div className="text-sm text-slate-900 dark:text-white py-2">
-                    {user?.profile?.address?.company || "—"}
+                    {user?.profile?.address?.company || '—'}
                   </div>
                 )}
               </div>
@@ -154,8 +154,8 @@ const ProfileView = ({ user }) => {
                 <Button
                   type="button"
                   text={formatMessage({
-                    id: "cancel",
-                    defaultMessage: "Cancel",
+                    id: 'cancel',
+                    defaultMessage: 'Cancel',
                   })}
                   onClick={onProfileUpdateComplete}
                   variant="secondary"
@@ -163,8 +163,8 @@ const ProfileView = ({ user }) => {
                 />
                 <SubmitButton className="text-sm px-3 py-1.5">
                   {formatMessage({
-                    id: "save",
-                    defaultMessage: "Save",
+                    id: 'save',
+                    defaultMessage: 'Save',
                   })}
                 </SubmitButton>
               </div>

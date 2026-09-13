@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import TextField from "./TextField";
+import TextField from './TextField';
 
 const PasswordField = ({ ...props }) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -12,7 +12,7 @@ const PasswordField = ({ ...props }) => {
 
   return (
     <div className="relative">
-      <TextField {...props} type={isPasswordVisible ? "text" : "password"} />
+      <TextField {...props} type={isPasswordVisible ? 'text' : 'password'} />
       <span
         role="button"
         tabIndex={-1}

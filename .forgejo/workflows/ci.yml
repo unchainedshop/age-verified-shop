@@ -1,0 +1,97 @@
+name: CI
+
+# Forgejo Actions pipeline (replaces the root Jenkinsfile).
+# Builds the two app images and publishes them to the git.ucc.dev package
+# registry, gated by a Trivy vulnerability scan. See MIGRATION.md for the
+# one-time repo/secret setup and the GitHub push-mirror (phase 2).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Serialize per-ref so two quick pushes to the same branch can't race the
+# shared :stable / :<branch>-latest tags.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: git.ucc.dev
+  REGISTRY_REPO: unchained/age-verified-shop
+
+jobs:
+  # Source-dependency scan. Hard-gates on fixable HIGH/CRITICAL (ADR-003).
+  # Runs on push AND pull_request so PRs are blocked before merge.
+  trivy:
+    name: Trivy vuln gate
+    runs-on: docker
+    steps:
+      - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Trivy runs as a digest-pinned container-action STEP, not a job `container:`.
+      # The minimal trivy image has no Node, so running the whole job inside it
+      # kills the JS checkout action with `exec: "node": not found`. Keeping the
+      # job on the default runner (which has Node) and invoking trivy as a
+      # `docker://` step preserves ADR-003's pinned image: Forgejo mounts the
+      # workspace into the step container and runs trivy's entrypoint with `args`.
+      # (Vuln-DB caching was dropped with the job container; trivy re-downloads the
+      # DB each run — cheap and reliable. Re-add via a workspace-mounted cache dir
+      # if run frequency makes it worth it.)
+      - name: trivy fs (fixable HIGH/CRITICAL gate)
+        uses: docker://ghcr.io/aquasecurity/trivy:0.72.0@sha256:cffe3f5161a47a6823fbd23d985795b3ed72a4c806da4c4df16266c02accdd6f
+        with:
+          args: fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --ignore-unfixed --no-progress --disable-telemetry .
+
+  # Raw docker build/push against the runner's host daemon (docker.sock automount)
+  # — mirrors the infrastructure repo's build workflow. We deliberately avoid the
+  # docker/* marketplace action wrappers: they aren't hosted on this instance's
+  # default actions registry (code.forgejo.org, no [actions] override on
+  # git.ucc.dev) so they'd fail to resolve, and ADR-003 bans unpinned action
+  # wrappers in jobs that hold a write:package PAT.
+  engine:
+    name: Build engine
+    runs-on: docker
+    needs: [trivy]
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Log in to the Forgejo container registry
+        run: echo "${{ secrets.PKG_PUSH_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
+      - name: Build + push engine
+        run: |
+          set -euo pipefail
+          IMAGE="$REGISTRY/$REGISTRY_REPO/engine"
+          TAGS="-t $IMAGE:sha-${GITHUB_SHA:0:7}"
+          if [ "$GITHUB_REF_TYPE" = "branch" ]; then TAGS="$TAGS -t $IMAGE:${GITHUB_REF_NAME}-latest"; fi
+          if [ "$GITHUB_REF_NAME" = "main" ]; then TAGS="$TAGS -t $IMAGE:stable"; fi
+          docker build -f ./engine/Dockerfile --build-arg GIT_COMMIT="$GITHUB_SHA" $TAGS ./engine
+          docker push --all-tags "$IMAGE"
+
+  # NEXT_PUBLIC_* values are baked into the client bundle at build time, so the
+  # storefront image is environment-specific. Seed values (swiyu.unchained.wtf)
+  # live in repo Variables — see MIGRATION.md.
+  storefront:
+    name: Build storefront
+    runs-on: docker
+    needs: [trivy]
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Log in to the Forgejo container registry
+        run: echo "${{ secrets.PKG_PUSH_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
+      - name: Build + push storefront
+        env:
+          NEXT_PUBLIC_GRAPHQL_ENDPOINT: ${{ vars.NEXT_PUBLIC_GRAPHQL_ENDPOINT }}
+          UNCHAINED_ENDPOINT: ${{ vars.UNCHAINED_ENDPOINT }}
+        run: |
+          set -euo pipefail
+          IMAGE="$REGISTRY/$REGISTRY_REPO/storefront"
+          TAGS="-t $IMAGE:sha-${GITHUB_SHA:0:7}"
+          if [ "$GITHUB_REF_TYPE" = "branch" ]; then TAGS="$TAGS -t $IMAGE:${GITHUB_REF_NAME}-latest"; fi
+          if [ "$GITHUB_REF_NAME" = "main" ]; then TAGS="$TAGS -t $IMAGE:stable"; fi
+          docker build -f ./storefront/Dockerfile \
+            --build-arg NEXT_PUBLIC_GRAPHQL_ENDPOINT="$NEXT_PUBLIC_GRAPHQL_ENDPOINT" \
+            --build-arg UNCHAINED_ENDPOINT="$UNCHAINED_ENDPOINT" \
+            $TAGS ./storefront
+          docker push --all-tags "$IMAGE"

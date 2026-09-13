@@ -1,34 +1,19 @@
 await import("./node_env.js");
 
-const {
-  GRAPHQL_ENDPOINT,
-  NODE_ENV,
-  SKIP_INVALID_REMOTES,
-  UNCHAINED_ENDPOINT,
-  DISABLE_EMAIL_PROCESSES,
-} = process.env;
-
-// Simple Next.js configuration without theme parsing
+// Next 16 removed serverRuntimeConfig / publicRuntimeConfig (and getConfig()).
+// Client-facing config now comes from NEXT_PUBLIC_* env vars (inlined at build
+// time); server-only values are read from process.env directly where needed.
 const nextJsConfig = {
-  serverRuntimeConfig: {},
-  publicRuntimeConfig: {
-    GRAPHQL_ENDPOINT,
-    NODE_ENV,
-    SKIP_INVALID_REMOTES: JSON.parse(SKIP_INVALID_REMOTES || "false"),
-    UNCHAINED_ENDPOINT,
-    disableEmailSupport: !!DISABLE_EMAIL_PROCESSES,
-  },
   images: {
-    domains: [
-      "prod-eidch-hcms-sdweb.imgix.net",
-      "developer.apple.com",
-      "play.google.com"
+    remotePatterns: [
+      { protocol: "https", hostname: "prod-eidch-hcms-sdweb.imgix.net" },
+      { protocol: "https", hostname: "developer.apple.com" },
+      { protocol: "https", hostname: "play.google.com" },
     ],
   },
-  i18n: {
-    locales: ["en", "de"],
-    defaultLocale: "en",
-  },
+  // NOTE: Next 16 removed the Pages Router `i18n` config (locale routing).
+  // The app falls back to 'en' (see _app.tsx / getMessages). Restoring
+  // en/de routing needs an App Router i18n migration (follow-up).
 };
 
 export default nextJsConfig;
