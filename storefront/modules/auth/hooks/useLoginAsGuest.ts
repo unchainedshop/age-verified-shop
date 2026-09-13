@@ -12,7 +12,9 @@ export const LOGIN_AS_GUEST_MUTATION = gql`
 
 const useLoginAsGuest = () => {
   const client = useApolloClient();
-  const [loginAsGuestMutation, props] = useMutation<any>(LOGIN_AS_GUEST_MUTATION);
+  const [loginAsGuestMutation, props] = useMutation<any>(
+    LOGIN_AS_GUEST_MUTATION,
+  );
 
   const loginAsGuest = async () => {
     console.log('Logging in as guest...');

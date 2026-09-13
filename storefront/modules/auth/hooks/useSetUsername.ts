@@ -11,7 +11,9 @@ export const SET_USERNAME_MUTATION = gql`
 `;
 
 const useSetUsername = () => {
-  const [setUsernameMutation, { error }] = useMutation<any>(SET_USERNAME_MUTATION);
+  const [setUsernameMutation, { error }] = useMutation<any>(
+    SET_USERNAME_MUTATION,
+  );
 
   const setUsername = async ({ username, userId }) => {
     return setUsernameMutation({

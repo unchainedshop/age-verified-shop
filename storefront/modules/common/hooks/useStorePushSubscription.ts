@@ -16,7 +16,9 @@ const STORE_SUBSCRIPTION_MUTATION = gql`
 `;
 
 const useStorePushSubscription = () => {
-  const [storeSubscriptionMutation] = useMutation<any>(STORE_SUBSCRIPTION_MUTATION);
+  const [storeSubscriptionMutation] = useMutation<any>(
+    STORE_SUBSCRIPTION_MUTATION,
+  );
 
   const storeSubscription = async ({ subscription }) => {
     return storeSubscriptionMutation({ variables: { subscription } });

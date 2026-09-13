@@ -22,7 +22,9 @@ const UPDATE_CART_CONTACT_MUTATION = gql`
 `;
 
 const useUpdateCartContact = () => {
-  const [updateCartContactMutation] = useMutation<any>(UPDATE_CART_CONTACT_MUTATION);
+  const [updateCartContactMutation] = useMutation<any>(
+    UPDATE_CART_CONTACT_MUTATION,
+  );
 
   const updateCartContact = async ({ contact, meta }) => {
     await updateCartContactMutation({

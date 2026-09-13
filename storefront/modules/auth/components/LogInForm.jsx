@@ -1,14 +1,14 @@
-import classNames from "classnames";
+import classNames from 'classnames';
 
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
-import { useIntl } from "react-intl";
-import { useAppContext } from "../../common/components/AppContextWrapper";
-import useGenerateLoginCredentials from "../hooks/useGenerateLoginCredentials";
-import useLoginWithPassword from "../hooks/useLoginWithPassword";
-import useLoginWithWebAuthn from "../hooks/useLoginWithWebAuthn";
+import { useIntl } from 'react-intl';
+import { useAppContext } from '../../common/components/AppContextWrapper';
+import useGenerateLoginCredentials from '../hooks/useGenerateLoginCredentials';
+import useLoginWithPassword from '../hooks/useLoginWithPassword';
+import useLoginWithWebAuthn from '../hooks/useLoginWithWebAuthn';
 
 const GetCurrentStep = ({
   step,
@@ -28,8 +28,8 @@ const GetCurrentStep = ({
             className="block text-sm font-medium text-brown-600"
           >
             {formatMessage({
-              id: "password",
-              defaultMessage: "Password",
+              id: 'password',
+              defaultMessage: 'Password',
             })}
           </label>
           <div className="mt-1">
@@ -37,7 +37,7 @@ const GetCurrentStep = ({
               id="password"
               name="password"
               type="password"
-              autoFocus // eslint-disable-line
+              autoFocus
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -55,12 +55,12 @@ const GetCurrentStep = ({
           >
             {!acceptEmail
               ? formatMessage({
-                  id: "username",
-                  defaultMessage: "Username",
+                  id: 'username',
+                  defaultMessage: 'Username',
                 })
               : formatMessage({
-                  id: "username-or-email",
-                  defaultMessage: "Username / Email",
+                  id: 'username-or-email',
+                  defaultMessage: 'Username / Email',
                 })}
           </label>
           <div className="mt-1">
@@ -88,8 +88,8 @@ const LogInForm = () => {
   const { loginWithWebAuthn } = useLoginWithWebAuthn();
   const [showPasswordNav, setShowPasswordNav] = useState(false);
   const [error, setError] = useState(null);
-  const [usernameOrEmail, setUsernameOrEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
+  const [password, setPassword] = useState('');
   const step = parseInt(router.query.step, 10) || 1;
 
   const nextStep = () => {
@@ -117,35 +117,35 @@ const LogInForm = () => {
   const handleError = (formError) => {
     const message = formError?.message?.toLowerCase();
     if (
-      message.includes("invalid credential") ||
-      message.includes("incorrect credential")
+      message.includes('invalid credential') ||
+      message.includes('incorrect credential')
     ) {
       setError(
         formatMessage({
-          id: "invalid-credential-error",
-          defaultMessage: "Invalid credential, please try again",
+          id: 'invalid-credential-error',
+          defaultMessage: 'Invalid credential, please try again',
         }),
       );
-    } else if (message.includes("no password set")) {
+    } else if (message.includes('no password set')) {
       setError(
         formatMessage({
-          id: "no-password-set-error",
-          defaultMessage: "User password not set",
+          id: 'no-password-set-error',
+          defaultMessage: 'User password not set',
         }),
       );
-    } else if (message.includes("operation either timed out")) {
+    } else if (message.includes('operation either timed out')) {
       setShowPasswordNav(true);
       setError(
         formatMessage({
-          id: "operation-timeout-error",
-          defaultMessage: "Operation timed out, please try again.",
+          id: 'operation-timeout-error',
+          defaultMessage: 'Operation timed out, please try again.',
         }),
       );
-    } else if (message.includes("you have provided all required parameters")) {
+    } else if (message.includes('you have provided all required parameters')) {
       setError(
         formatMessage({
-          id: "email-required-login-error",
-          defaultMessage: "Email is required when logging in with password",
+          id: 'email-required-login-error',
+          defaultMessage: 'Email is required when logging in with password',
         }),
       );
     } else {
@@ -162,7 +162,7 @@ const LogInForm = () => {
         webAuthnPublicKeyCredentials,
       });
       if (data && data?.loginWithWebAuthn) {
-        router.push("/");
+        router.push('/');
         return true;
       }
     }
@@ -194,7 +194,7 @@ const LogInForm = () => {
     }
 
     if (!data?.errors?.length) {
-      router.push("/");
+      router.push('/');
       return true;
     }
     handleError(data.errors[0]);
@@ -206,7 +206,7 @@ const LogInForm = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div>
           <h2 className="mt-6 text-center text-3xl font-semibold tracking-tight dark:text-white ">
-            {formatMessage({ id: "log_in", defaultMessage: "Log In" })}
+            {formatMessage({ id: 'log_in', defaultMessage: 'Log In' })}
           </h2>
           {!emailSupportDisabled ? (
             <p className="mt-2 text-center text-sm text-slate-600 dark:text-white">
@@ -215,8 +215,8 @@ const LogInForm = () => {
                 className="ml-1 font-medium text-slate-600 hover:text-slate-800 dark:text-white"
               >
                 {formatMessage({
-                  id: "forgot_password",
-                  defaultMessage: "Forgot your password?",
+                  id: 'forgot_password',
+                  defaultMessage: 'Forgot your password?',
                 })}
               </Link>
             </p>
@@ -231,15 +231,15 @@ const LogInForm = () => {
             className="text-red-600 text-sm mx-auto block mt-5"
           >
             {formatMessage({
-              id: "back",
-              defaultMessage: "← Back",
+              id: 'back',
+              defaultMessage: '← Back',
             })}
           </button>
         )}
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-white dark:bg-slate-500">
           <div
-            className={classNames("py-8 px-4 shadow sm:rounded-lg sm:px-10")}
+            className={classNames('py-8 px-4 shadow sm:rounded-lg sm:px-10')}
           >
             <div className="space-y-6 sm:rounded-lg">
               <form onSubmit={onSubmit}>
@@ -258,8 +258,8 @@ const LogInForm = () => {
                   <p className="text-center font-semibold text-red-700 cursor-pointer">
                     <button type="button" onClick={nextStep}>
                       {formatMessage({
-                        id: "use-password-to-authenticate",
-                        defaultMessage: "Or Use password to authenticate",
+                        id: 'use-password-to-authenticate',
+                        defaultMessage: 'Or Use password to authenticate',
                       })}
                     </button>
                   </p>
@@ -270,8 +270,8 @@ const LogInForm = () => {
                     id="submit"
                     name="submit"
                     value={formatMessage({
-                      id: "continue",
-                      defaultMessage: "Continue",
+                      id: 'continue',
+                      defaultMessage: 'Continue',
                     })}
                     className="flex w-full justify-center rounded-md border border-transparent bg-slate-800 py-2 px-4 text-sm font-medium text-white shadow-xs hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2"
                   />
@@ -279,7 +279,7 @@ const LogInForm = () => {
               </form>
               <div className="text-sm text-slate-800 dark:text-slate-200">
                 {formatMessage({
-                  id: "dont-have-account",
+                  id: 'dont-have-account',
                   defaultMessage: `Don't have an account?`,
                 })}
                 <Link
@@ -287,8 +287,8 @@ const LogInForm = () => {
                   className="ml-1 font-medium text-slate-600 hover:text-slate-800 dark:text-slate-800 "
                 >
                   {formatMessage({
-                    id: "join-now",
-                    defaultMessage: "Join now",
+                    id: 'join-now',
+                    defaultMessage: 'Join now',
                   })}
                 </Link>
               </div>

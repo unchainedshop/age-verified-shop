@@ -64,9 +64,8 @@ export const ADD_CART_PRODUCT_MUTATION = gql`
 `;
 
 const useAddCartProduct = () => {
-  const [addCartProductMutation, { client, ...mutationResults }] = useMutation<any>(
-    ADD_CART_PRODUCT_MUTATION,
-  );
+  const [addCartProductMutation, { client, ...mutationResults }] =
+    useMutation<any>(ADD_CART_PRODUCT_MUTATION);
   const { user } = useUser();
   const [loginAsGuestMutation] = useMutation<any>(LOGIN_AS_GUEST_MUTATION);
 

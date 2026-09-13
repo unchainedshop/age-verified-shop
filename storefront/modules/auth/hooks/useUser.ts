@@ -12,7 +12,8 @@ export const USER_QUERY = gql`
 `;
 
 const useUser = () => {
-  const { data, loading, error, refetch, previousData } = useQuery<any>(USER_QUERY);
+  const { data, loading, error, refetch, previousData } =
+    useQuery<any>(USER_QUERY);
 
   return {
     loading,

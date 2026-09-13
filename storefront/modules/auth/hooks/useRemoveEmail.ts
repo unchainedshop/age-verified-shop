@@ -14,7 +14,9 @@ export const REMOVE_EMAIL_MUTATION = gql`
 `;
 
 const useRemoveEmail = () => {
-  const [removeEmailMutation, { error }] = useMutation<any>(REMOVE_EMAIL_MUTATION);
+  const [removeEmailMutation, { error }] = useMutation<any>(
+    REMOVE_EMAIL_MUTATION,
+  );
 
   const removeEmail = async (email) => {
     return removeEmailMutation({

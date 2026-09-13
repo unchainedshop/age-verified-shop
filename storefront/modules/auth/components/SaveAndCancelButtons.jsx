@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import { useIntl } from "react-intl";
-import Button from "../../common/components/Button";
+import classNames from 'classnames';
+import { useIntl } from 'react-intl';
+import Button from '../../common/components/Button';
 
 const SaveAndCancelButtons = ({
   cancelText,
@@ -14,7 +14,7 @@ const SaveAndCancelButtons = ({
   return (
     <span
       className={classNames(
-        "flex flex-shrink-0 items-center space-x-4 py-5 pl-1",
+        'flex flex-shrink-0 items-center space-x-4 py-5 pl-1',
         className,
       )}
     >
@@ -27,8 +27,8 @@ const SaveAndCancelButtons = ({
           text={
             cancelText ||
             formatMessage({
-              id: "cancel",
-              defaultMessage: "Cancel",
+              id: 'cancel',
+              defaultMessage: 'Cancel',
             })
           }
           fullWidth={false}
@@ -44,8 +44,8 @@ const SaveAndCancelButtons = ({
           text={
             submitText ||
             formatMessage({
-              id: "save",
-              defaultMessage: "Save",
+              id: 'save',
+              defaultMessage: 'Save',
             })
           }
         />
