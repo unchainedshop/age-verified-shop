@@ -114,6 +114,8 @@ After this, `git.ucc.dev` is the source of truth and every push fans out to GitH
 
 - Jenkins ran no tests or lint here; parity is preserved. The engine has a real
   `tsc --noEmit` gate (`npm run lint`) that could be added as a `test` job later.
-- BuildKit: Jenkins forced `DOCKER_BUILDKIT=0`; the new pipeline uses buildx. If an
-  image fails to build under buildx, fall back to a plain `docker build`/`docker push`
-  step for that image (the runner has host docker.sock).
+- Build: the `engine`/`storefront` jobs run plain `docker build`/`docker push` against
+  the runner's host docker.sock (automount) — mirroring the infrastructure repo's build
+  workflow — rather than the `docker/*` marketplace actions, which don't resolve on this
+  instance's default actions registry (`code.forgejo.org`) and are unpinned wrappers
+  ADR-003 disallows in a job holding a `write:package` PAT.

@@ -11,6 +11,12 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Serialize per-ref so two quick pushes to the same branch can't race the
+# shared :stable / :<branch>-latest tags.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   REGISTRY: git.ucc.dev
   REGISTRY_REPO: unchained/age-verified-shop
@@ -43,43 +49,30 @@ jobs:
           trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --ignore-unfixed \
             --no-progress --disable-telemetry .
 
+  # Raw docker build/push against the runner's host daemon (docker.sock automount)
+  # — mirrors the infrastructure repo's build workflow. We deliberately avoid the
+  # docker/* marketplace action wrappers: they aren't hosted on this instance's
+  # default actions registry (code.forgejo.org, no [actions] override on
+  # git.ucc.dev) so they'd fail to resolve, and ADR-003 bans unpinned action
+  # wrappers in jobs that hold a write:package PAT.
   engine:
     name: Build engine
     runs-on: docker
     needs: [trivy]
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-        with:
-          buildkitd-config-inline: |
-            [registry."${{ env.REGISTRY }}"]
-              mirrors = ["${{ env.REGISTRY }}"]
-      - uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
-      - id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/engine
-          tags: |
-            type=sha,prefix=sha-,format=short
-            type=raw,value=${{ github.ref_name }}-latest,enable=${{ github.ref_type == 'branch' }}
-            type=raw,value=stable,enable=${{ github.ref_name == 'main' }}
-      - uses: docker/build-push-action@v6
-        with:
-          context: ./engine
-          file: ./engine/Dockerfile
-          push: true
-          provenance: false
-          build-args: |
-            GIT_COMMIT=${{ github.sha }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/engine:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/engine:buildcache,mode=max,ignore-error=true
+      - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Log in to the Forgejo container registry
+        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
+      - name: Build + push engine
+        run: |
+          set -euo pipefail
+          IMAGE="$REGISTRY/$REGISTRY_REPO/engine"
+          TAGS="-t $IMAGE:sha-${GITHUB_SHA:0:7}"
+          if [ "$GITHUB_REF_TYPE" = "branch" ]; then TAGS="$TAGS -t $IMAGE:${GITHUB_REF_NAME}-latest"; fi
+          if [ "$GITHUB_REF_NAME" = "main" ]; then TAGS="$TAGS -t $IMAGE:stable"; fi
+          docker build -f ./engine/Dockerfile --build-arg GIT_COMMIT="$GITHUB_SHA" $TAGS ./engine
+          docker push --all-tags "$IMAGE"
 
   # NEXT_PUBLIC_* values are baked into the client bundle at build time, so the
   # storefront image is environment-specific. Seed values (swiyu.unchained.wtf)
@@ -90,35 +83,21 @@ jobs:
     needs: [trivy]
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-        with:
-          buildkitd-config-inline: |
-            [registry."${{ env.REGISTRY }}"]
-              mirrors = ["${{ env.REGISTRY }}"]
-      - uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
-      - id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/storefront
-          tags: |
-            type=sha,prefix=sha-,format=short
-            type=raw,value=${{ github.ref_name }}-latest,enable=${{ github.ref_type == 'branch' }}
-            type=raw,value=stable,enable=${{ github.ref_name == 'main' }}
-      - uses: docker/build-push-action@v6
-        with:
-          context: ./storefront
-          file: ./storefront/Dockerfile
-          push: true
-          provenance: false
-          build-args: |
-            NEXT_PUBLIC_GRAPHQL_ENDPOINT=${{ vars.NEXT_PUBLIC_GRAPHQL_ENDPOINT }}
-            UNCHAINED_ENDPOINT=${{ vars.UNCHAINED_ENDPOINT }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/storefront:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_REPO }}/storefront:buildcache,mode=max,ignore-error=true
+      - uses: https://data.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Log in to the Forgejo container registry
+        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login "$REGISTRY" -u "${{ vars.REGISTRY_USER || github.actor }}" --password-stdin
+      - name: Build + push storefront
+        env:
+          NEXT_PUBLIC_GRAPHQL_ENDPOINT: ${{ vars.NEXT_PUBLIC_GRAPHQL_ENDPOINT }}
+          UNCHAINED_ENDPOINT: ${{ vars.UNCHAINED_ENDPOINT }}
+        run: |
+          set -euo pipefail
+          IMAGE="$REGISTRY/$REGISTRY_REPO/storefront"
+          TAGS="-t $IMAGE:sha-${GITHUB_SHA:0:7}"
+          if [ "$GITHUB_REF_TYPE" = "branch" ]; then TAGS="$TAGS -t $IMAGE:${GITHUB_REF_NAME}-latest"; fi
+          if [ "$GITHUB_REF_NAME" = "main" ]; then TAGS="$TAGS -t $IMAGE:stable"; fi
+          docker build -f ./storefront/Dockerfile \
+            --build-arg NEXT_PUBLIC_GRAPHQL_ENDPOINT="$NEXT_PUBLIC_GRAPHQL_ENDPOINT" \
+            --build-arg UNCHAINED_ENDPOINT="$UNCHAINED_ENDPOINT" \
+            $TAGS ./storefront
+          docker push --all-tags "$IMAGE"
