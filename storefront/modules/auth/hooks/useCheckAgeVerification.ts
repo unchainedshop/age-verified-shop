@@ -1,4 +1,5 @@
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 
 export const CHECK_AGE_VERIFICATION = gql`
   mutation CheckAgeVerification($requestId: ID!) {
@@ -13,7 +14,7 @@ export const CHECK_AGE_VERIFICATION = gql`
 `;
 
 const useCheckAgeVerification = () => {
-  const [checkAgeVerificationMutation, { loading, error }] = useMutation(
+  const [checkAgeVerificationMutation, { loading, error }] = useMutation<any>(
     CHECK_AGE_VERIFICATION,
   );
 

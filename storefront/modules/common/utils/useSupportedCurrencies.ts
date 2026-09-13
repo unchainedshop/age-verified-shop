@@ -1,4 +1,5 @@
-import { useQuery, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 
 export const SUPPORTED_CURRENCIES_QUERY = gql`
   query SupportedCurrencies {
@@ -11,7 +12,7 @@ export const SUPPORTED_CURRENCIES_QUERY = gql`
 `;
 
 const useSupportedCurrencies = () => {
-  const { data, loading, error } = useQuery(SUPPORTED_CURRENCIES_QUERY);
+  const { data, loading, error } = useQuery<any>(SUPPORTED_CURRENCIES_QUERY);
 
   const currencies = data?.currencies || [];
 

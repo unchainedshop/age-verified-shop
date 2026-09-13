@@ -1,4 +1,5 @@
-import { useMutation, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 
 const UPDATE_CART_CONTACT_MUTATION = gql`
   mutation UpdateCartContact(
@@ -21,7 +22,7 @@ const UPDATE_CART_CONTACT_MUTATION = gql`
 `;
 
 const useUpdateCartContact = () => {
-  const [updateCartContactMutation] = useMutation(UPDATE_CART_CONTACT_MUTATION);
+  const [updateCartContactMutation] = useMutation<any>(UPDATE_CART_CONTACT_MUTATION);
 
   const updateCartContact = async ({ contact, meta }) => {
     await updateCartContactMutation({

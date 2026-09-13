@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import getConfig from 'next/config';
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import StripeCheckoutForm from './StripeCheckoutForm';
 
-const {
-  publicRuntimeConfig: { publishableKey },
-} = getConfig();
+// Next 16 removed publicRuntimeConfig; use a NEXT_PUBLIC_* env var (inlined at
+// build time). Empty string keeps loadStripe's argument a string when unset.
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
 
 const stripePromise = loadStripe(publishableKey);
 
@@ -27,7 +27,7 @@ export const SIGN_STRIPE_MUTATION = gql`
 const StripeCheckoutButton = ({ order }) => {
   const { formatMessage } = useIntl();
   const [clientSecret, setClientSecret] = useState('');
-  const [signStripeMutation] = useMutation(SIGN_STRIPE_MUTATION);
+  const [signStripeMutation] = useMutation<any>(SIGN_STRIPE_MUTATION);
 
   const successUrl = `${window.location.origin}/order/${order._id}/success`;
   // const cancelUrl = `${window.location.origin}/checkout`;

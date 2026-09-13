@@ -1,4 +1,5 @@
-import { useMutation, useApolloClient, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation, useApolloClient } from '@apollo/client/react';
 
 export const LOGIN_AS_GUEST_MUTATION = gql`
   mutation LoginAsGuest {
@@ -11,7 +12,7 @@ export const LOGIN_AS_GUEST_MUTATION = gql`
 
 const useLoginAsGuest = () => {
   const client = useApolloClient();
-  const [loginAsGuestMutation, props] = useMutation(LOGIN_AS_GUEST_MUTATION);
+  const [loginAsGuestMutation, props] = useMutation<any>(LOGIN_AS_GUEST_MUTATION);
 
   const loginAsGuest = async () => {
     console.log('Logging in as guest...');

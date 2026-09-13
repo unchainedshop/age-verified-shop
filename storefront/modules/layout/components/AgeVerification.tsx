@@ -10,7 +10,7 @@ import useRequestAgeVerification from '../../auth/hooks/useRequestAgeVerificatio
 import useLoginAsGuest from '../../auth/hooks/useLoginAsGuest';
 import useLogout from '../../auth/hooks/useLogout';
 import AgeVerificationButton from './AgeVerificationButton';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 
 export default function AgeVerification() {
   const { formatMessage } = useIntl();
