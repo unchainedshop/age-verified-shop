@@ -7,7 +7,7 @@
   "type": "module",
   "engineStrict": true,
   "engines": {
-    "node": "22.x"
+    "node": ">=26.6.0"
   },
   "overrides": {
     "@unicode/unicode-17.0.0": "1.6.17"

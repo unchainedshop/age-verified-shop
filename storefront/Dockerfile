@@ -1,16 +1,13 @@
-FROM node:22-alpine AS bundler
+FROM node:26.8-alpine AS bundler
 
-# Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-# Install app dependencies
 COPY package* /usr/src/app/
 
 ENV TZ="Europe/Amsterdam"
-RUN npm install
+RUN npm ci
 
-# Build app
 COPY . /usr/src/app/
 
 ARG UNCHAINED_ENDPOINT=http://swiyu.unchained.wtf/graphql
@@ -23,27 +20,32 @@ ENV NEXT_TELEMETRY_DISABLED="1"
 RUN npm run build && \
     rm -Rf node_modules
 
-FROM node:22-alpine AS runtime
+# Runtime: `next start` (not standalone — next.config.js loads node_env.js /
+# file_env.js at server start for .env + *_FILE secrets, which the standalone
+# server.js would skip). Node 26 ships full ICU; full-icu is not needed.
+FROM node:26.8-alpine AS runtime
 
+# Own the working directory itself: the app writes into its CWD (.next cache).
+RUN mkdir -p /usr/src/app && chown node:node /usr/src/app
 WORKDIR /usr/src/app
 
 ENV NEXT_TELEMETRY_DISABLED="1"
 ENV TZ="Europe/Amsterdam"
 ENV NODE_ENV="production"
-ENV NODE_ICU_DATA node_modules/full-icu
 
-# Install full-icu
-RUN npm install full-icu
+COPY --chown=node:node --from=bundler /usr/src/app/package* /usr/src/app/
+RUN npm ci --omit=dev && npm cache clean --force
+COPY --chown=node:node --from=bundler /usr/src/app /usr/src/app/
 
-COPY --from=bundler /usr/src/app/package* /usr/src/app/
-RUN npm install --omit=dev
-COPY --from=bundler /usr/src/app /usr/src/app/
+ARG GIT_COMMIT="n/a"
+RUN echo "${GIT_COMMIT}" > /usr/src/app/version.txt && chown node:node /usr/src/app/version.txt
 
-RUN echo "${GIT_COMMIT}" > /usr/src/version.txt
+USER node
 
-HEALTHCHECK --timeout=1s --start-period=2s \
-  CMD wget --spider -q http://localhost:3000 || exit 1
+HEALTHCHECK --start-period=30s --interval=30s --timeout=5s --retries=3 \
+  CMD ["node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok||(r.status>=300&&r.status<400)?0:1),()=>process.exit(1))"]
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# = `next start` without npm as the parent process.
+CMD ["node", "node_modules/next/dist/bin/next", "start"]
